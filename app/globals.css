@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  /* Cores customizadas para dark mode */
+  --color-background: #020617;
+  --color-foreground: #f1f5f9;
+
+  --color-card: #0f172a;
+  --color-card-foreground: #f1f5f9;
+
+  --color-popover: #0f172a;
+  --color-popover-foreground: #f1f5f9;
+
+  --color-primary: #f1f5f9;
+  --color-primary-foreground: #0f172a;
+
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f1f5f9;
+
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+
+  --color-accent: #1e293b;
+  --color-accent-foreground: #f1f5f9;
+
+  --color-destructive: #7f1d1d;
+  --color-destructive-foreground: #f1f5f9;
+
+  --color-border: #1e293b;
+  --color-input: #1e293b;
+  --color-ring: #cbd5e1;
+
+  --radius: 0.5rem;
+}
+
+/* Estilo base para body */
+body {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}

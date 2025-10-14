@@ -1,0 +1,226 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+
+export default function ConsentBanner() {
+  const { data: session, status } = useSession();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [emailOptIn, setEmailOptIn] = useState(true); // Pré-selecionado por padrão
+
+  useEffect(() => {
+    // Só tentar buscar se estiver logado
+    if (status === "loading") {
+      return; // Aguardar sessão carregar
+    }
+
+    if (status === "unauthenticated" || !session?.user) {
+      setLoading(false);
+      return; // Não mostrar para usuários não logados
+    }
+
+    // Usuário está logado, verificar consentimentos
+    console.log(
+      "[ConsentBanner] Verificando consentimentos para:",
+      session.user.username
+    );
+
+    fetch("/api/consent")
+      .then(async (r) => {
+        console.log("[ConsentBanner] Response status:", r.status);
+
+        if (r.ok) {
+          const { consents } = await r.json();
+          console.log("[ConsentBanner] Consents:", consents);
+
+          // Se não tiver consentido ainda, mostrar banner
+          if (!consents?.privacyConsentAt || !consents?.tosAcceptedAt) {
+            console.log(
+              "[ConsentBanner] Mostrando banner - consentimentos pendentes"
+            );
+            setOpen(true);
+          } else {
+            console.log("[ConsentBanner] Consentimentos já aceitos");
+          }
+
+          // Pré-carregar estado do emailOptIn
+          if (consents?.emailOptIn) {
+            setEmailOptIn(true);
+          }
+        } else if (r.status === 404) {
+          // Usuário não existe no Postgres ainda (banco não configurado?)
+          console.warn("[ConsentBanner] Usuário não encontrado no banco (404)");
+          // Mostrar banner mesmo assim para coletar consentimento quando banco estiver pronto
+          setOpen(true);
+        } else {
+          console.error(
+            "[ConsentBanner] Erro ao buscar consentimentos:",
+            r.status
+          );
+          // Mostrar banner em caso de erro para garantir coleta de consentimento
+          setOpen(true);
+        }
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("[ConsentBanner] Erro na requisição:", error);
+        // Em caso de erro, mostrar banner para garantir consentimento
+        setOpen(true);
+        setLoading(false);
+      });
+  }, [session, status]);
+
+  // Não mostrar enquanto carrega a sessão
+  if (status === "loading" || loading) return null;
+
+  // Não mostrar para usuários não logados
+  if (!session?.user) return null;
+
+  // Não mostrar se não precisa consentimento
+  if (!open) return null;
+
+  const onAccept = async () => {
+    try {
+      console.log("[ConsentBanner] Salvando consentimentos...", { emailOptIn });
+
+      const response = await fetch("/api/consent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          emailOptIn,
+          acceptPrivacy: true,
+          acceptTos: true,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("[ConsentBanner] Consentimentos salvos:", data);
+        setOpen(false);
+      } else {
+        const error = await response.json();
+        console.error(
+          "[ConsentBanner] Erro ao salvar:",
+          response.status,
+          error
+        );
+
+        // Se o erro for por falta de banco, avisar o usuário
+        if (response.status === 404 || response.status === 500) {
+          alert(
+            "Banco de dados não configurado. Configure DATABASE_URL e rode: npx prisma migrate dev"
+          );
+        } else {
+          alert("Erro ao salvar consentimentos. Tente novamente.");
+        }
+      }
+    } catch (error) {
+      console.error("[ConsentBanner] Erro ao salvar consentimentos:", error);
+      alert(
+        "Erro ao salvar consentimentos. Verifique o console para mais detalhes."
+      );
+    }
+  };
+
+  return (
+    <div
+      className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-lg w-[92vw] z-50
+                 bg-slate-900/95 backdrop-blur-xl border border-slate-800/50
+                 rounded-xl p-4 shadow-2xl
+                 animate-in fade-in slide-in-from-bottom-4 duration-500"
+    >
+      <div className="space-y-3">
+        {/* Header */}
+        <div className="flex items-start gap-2.5">
+          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+            <svg
+              className="w-4 h-4 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-slate-100 mb-0.5">
+              Privacidade e Consentimentos
+            </h3>
+            <p className="text-xs text-slate-500">
+              Usamos seus dados conforme nossa Política de Privacidade e Termos
+              de Uso
+            </p>
+          </div>
+        </div>
+
+        {/* Checkbox */}
+        <label className="flex items-start gap-2.5 cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={emailOptIn}
+            onChange={(e) => setEmailOptIn(e.target.checked)}
+            className="mt-0.5 w-3.5 h-3.5 rounded border-slate-600 bg-slate-800 text-blue-600
+                     focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+          />
+          <div className="flex-1">
+            <span className="text-xs text-slate-300 font-medium group-hover:text-slate-100 transition-colors">
+              Quero receber insights exclusivos para acelerar minha carreira em
+              tech{" "}
+            </span>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Dicas de projetos, tendências do mercado e oportunidades ✨
+            </p>
+          </div>
+        </label>
+
+        {/* Actions */}
+        <div className="flex items-center justify-end gap-2 pt-1">
+          <Button
+            onClick={() => setOpen(false)}
+            variant="ghost"
+            size="sm"
+            className="text-slate-500 hover:text-slate-200 h-8 text-xs"
+          >
+            Agora não
+          </Button>
+          <Button
+            onClick={onAccept}
+            size="sm"
+            className="bg-blue-600/90 hover:bg-blue-600 text-white h-8 text-xs"
+          >
+            Aceitar
+          </Button>
+        </div>
+
+        {/* Footer links */}
+        <div className="flex items-center justify-center gap-3 pt-2 border-t border-slate-800/50">
+          <a
+            href="/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+          >
+            Privacidade
+          </a>
+          <span className="text-slate-800">•</span>
+          <a
+            href="/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+          >
+            Termos
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}

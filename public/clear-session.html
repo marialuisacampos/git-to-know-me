@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Limpar Sessão</title>
+  <script>
+    // Limpar cookie dev-session
+    document.cookie = "dev-session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "__Secure-next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 500);
+  </script>
+</head>
+<body>
+  <p>Limpando sessão...</p>
+</body>
+</html>
