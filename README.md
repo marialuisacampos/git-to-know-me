@@ -1,10 +1,47 @@
 # git-to-know-me
 
-A modern portfolio platform that transforms your GitHub repositories into a beautiful, personalized website.
+<img width="2048" height="1077" alt="image" src="https://github.com/user-attachments/assets/d751ab21-94fa-4133-9ec8-f13e90163af6" />
+
+
+
+A modern portfolio platform that transforms your GitHub repositories into a beautiful, personalized website. - www.gittoknowme.com.br
 
 ## About
 
 git-to-know-me automatically syncs your GitHub projects and blog posts, creating a professional portfolio without any manual setup. Just log in with GitHub and your portfolio is ready to share.
+
+## How to Use
+
+Creating your portfolio is simple:
+
+1. **Sign in with GitHub**
+
+   - Visit the platform and click "Login with GitHub"
+   - Authorize the application to access your public repositories
+
+2. **Your portfolio is created automatically**
+
+   - On first login, all your public repositories are synced automatically
+   - Your profile is available at `www.gittoknowme.com/u/your-github-username`
+   - After the first login, sync must be done manually when you want to update
+
+3. **Customize your profile** (optional)
+
+   - Add a bio
+   - Add social links (Twitter, LinkedIn, Instagram)
+   - Select which repositories to display
+   - Add custom preview URLs for your projects
+
+4. **Create blog posts** (optional)
+
+   - Create a public repository named `blog-posts` on GitHub
+   - Add markdown files
+
+   - Sync again to see your posts
+
+5. **Share your portfolio**
+   - Your unique URL: `www.gittoknowme.com/u/your-github-username`
+   - To update your portfolio with new repositories or blog posts, click the sync button on your profile page
 
 ## Stack
 
