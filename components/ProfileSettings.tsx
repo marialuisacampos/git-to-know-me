@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/Button";
 import { CopyLink } from "@/components/CopyLink";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface ProfileSettingsProps {
@@ -14,10 +16,11 @@ export function ProfileSettings({
   username,
   portfolioUrl,
 }: ProfileSettingsProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
-  // Controlar animação de saída
   useEffect(() => {
     if (isOpen) {
       setIsAnimating(true);
@@ -28,7 +31,13 @@ export function ProfileSettings({
   }, [isOpen, isAnimating]);
 
   async function handleSync() {
+    setIsSyncing(true);
+
     try {
+      toast.info("Sincronizando seus dados do GitHub...", {
+        description: "Isso pode levar alguns segundos.",
+      });
+
       const res = await fetch("/api/sync/github", {
         method: "POST",
         credentials: "include",
@@ -37,25 +46,32 @@ export function ProfileSettings({
       const data = await res.json();
 
       if (res.ok) {
-        alert(
-          `✅ Sincronizado! ${data.projects} projetos e ${data.posts} posts`
-        );
+        toast.success("Sincronização concluída!", {
+          description: `${data.projects} projetos e ${data.posts} posts atualizados.`,
+        });
+
+        setIsOpen(false);
+        router.refresh();
       } else {
-        alert(`❌ Erro: ${data.error}`);
+        toast.error("Erro ao sincronizar", {
+          description: data.error || "Tente novamente.",
+        });
       }
     } catch {
-      alert("❌ Erro ao sincronizar");
+      toast.error("Erro de conexão", {
+        description: "Não foi possível sincronizar com o GitHub.",
+      });
+    } finally {
+      setIsSyncing(false);
     }
   }
 
   return (
     <div className="relative">
-      {/* Botão de abrir settings */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
         variant="outline"
         size="sm"
-        className="group bg-slate-900/30 backdrop-blur-md border-slate-800/50 hover:bg-slate-800/40 hover:border-slate-700 transition-all duration-200 h-8"
         aria-label="Configurações do perfil"
       >
         <svg
@@ -81,10 +97,8 @@ export function ProfileSettings({
         </svg>
       </Button>
 
-      {/* Painel de settings */}
       {isAnimating && (
         <>
-          {/* Backdrop com animação */}
           <div
             className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] transition-opacity duration-200 ${
               isOpen ? "opacity-100" : "opacity-0"
@@ -92,7 +106,6 @@ export function ProfileSettings({
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Panel com animação melhorada */}
           <div
             className={`fixed top-20 right-6 w-80 bg-slate-900/95 backdrop-blur-xl border border-slate-800/50 rounded-xl shadow-2xl z-[101] transition-all duration-300 ease-out ${
               isOpen
@@ -100,7 +113,6 @@ export function ProfileSettings({
                 : "opacity-0 -translate-y-4 scale-95 pointer-events-none"
             }`}
           >
-            {/* Header */}
             <div className="flex items-center justify-between p-5 pb-4 border-b border-slate-800/50">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
@@ -144,9 +156,7 @@ export function ProfileSettings({
               </button>
             </div>
 
-            {/* Content */}
             <div className="p-5 space-y-3">
-              {/* Dashboard */}
               <Link
                 href="/dashboard"
                 className="group flex items-center gap-2.5 p-3 bg-blue-500/10 hover:bg-blue-500/15 border border-blue-500/20 rounded-lg transition-all duration-200"
@@ -187,7 +197,6 @@ export function ProfileSettings({
                 </svg>
               </Link>
 
-              {/* Compartilhar */}
               <div className="p-3 bg-slate-800/20 border border-slate-800/50 rounded-lg space-y-2">
                 <div className="flex items-center gap-1.5">
                   <svg
@@ -212,7 +221,6 @@ export function ProfileSettings({
                 </div>
               </div>
 
-              {/* Sincronizar */}
               <div className="p-3 bg-slate-800/20 border border-slate-800/50 rounded-lg space-y-2">
                 <div className="flex items-center gap-1.5">
                   <svg
@@ -234,29 +242,56 @@ export function ProfileSettings({
                 </div>
                 <Button
                   onClick={handleSync}
+                  disabled={isSyncing}
                   variant="outline"
                   size="sm"
-                  className="w-full border-slate-700 hover:bg-slate-700/50 group h-8 text-xs"
+                  className="w-full"
                 >
-                  <svg
-                    className="w-3.5 h-3.5 mr-1.5 group-hover:rotate-180 transition-transform duration-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  Sincronizar
+                  {isSyncing ? (
+                    <>
+                      <svg
+                        className="w-3.5 h-3.5 mr-1.5 animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Sincronizando...
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        className="w-3.5 h-3.5 mr-1.5 group-hover:rotate-180 transition-transform duration-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                      Sincronizar
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
 
-            {/* Footer */}
             <div className="p-5 pt-3 border-t border-slate-800/50">
               <a
                 href={`https://github.com/${username}`}

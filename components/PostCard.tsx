@@ -18,10 +18,8 @@ export function PostCard({ post, username }: PostCardProps) {
       href={`/u/${username}/blog/${post.slug}`}
       className="group relative block overflow-hidden rounded-xl transition-all duration-300 hover:scale-[1.01]"
     >
-      {/* Glass card minimalista */}
       <div className="relative h-full bg-slate-900/30 backdrop-blur-xl border border-slate-800/50 group-hover:border-slate-700/80 rounded-xl p-5 transition-all duration-300">
         <div className="relative space-y-3">
-          {/* Date */}
           <time
             dateTime={post.publishedAt}
             className="block text-xs text-slate-500"
@@ -29,19 +27,16 @@ export function PostCard({ post, username }: PostCardProps) {
             {publishedDate}
           </time>
 
-          {/* Title */}
           <h2 className="text-base font-semibold text-slate-100 group-hover:text-white transition-colors duration-300 line-clamp-2 leading-snug">
             {post.title}
           </h2>
 
-          {/* Summary */}
           {post.summary && (
             <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">
               {post.summary}
             </p>
           )}
 
-          {/* Tags compactas */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 pt-1">
               {post.tags.slice(0, 3).map((tag) => (
@@ -60,7 +55,6 @@ export function PostCard({ post, username }: PostCardProps) {
             </div>
           )}
 
-          {/* Read indicator */}
           <div className="flex items-center gap-1.5 pt-1 text-xs text-slate-500 group-hover:text-slate-400 transition-colors duration-300">
             <span>Ler artigo</span>
             <svg

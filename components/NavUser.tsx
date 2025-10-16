@@ -12,7 +12,6 @@ export function NavUser({ username, currentPage }: NavUserProps) {
       aria-label="Navegação do perfil"
     >
       <div className="flex items-center gap-3">
-        {/* Voltar */}
         {currentPage && currentPage !== "profile" && (
           <Link
             href={`/u/${username}`}
@@ -35,7 +34,6 @@ export function NavUser({ username, currentPage }: NavUserProps) {
           </Link>
         )}
 
-        {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-slate-500">
           <Link
             href={`/u/${username}`}
@@ -60,7 +58,6 @@ export function NavUser({ username, currentPage }: NavUserProps) {
         </div>
       </div>
 
-      {/* CTA discreto */}
       <Link
         href="/"
         className="group flex items-center gap-1 text-xs text-slate-600 hover:text-slate-400 transition-colors duration-150"

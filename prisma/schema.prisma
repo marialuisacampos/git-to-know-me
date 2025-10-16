@@ -17,12 +17,21 @@ model User {
   avatarUrl       String?
   bio             String?
 
-  // Relations 1:1
-  consents        Consent?
-  activity        Activity?
+  // Social links
+  twitterUrl   String?
+  linkedinUrl  String?
+  instagramUrl String?
 
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  // Relations 1:1
+  consents Consent?
+  config   UserConfig?
+
+  // Relations 1:N
+  projects Project[]
+  posts    BlogPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([githubId])
   @@index([username])
@@ -36,23 +45,66 @@ model Consent {
   privacyConsentAt DateTime?
   tosAcceptedAt    DateTime?
 
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Activity {
-  id           String   @id @default(cuid())
-  userId       String   @unique
-  firstSeenAt  DateTime @default(now())
-  lastSeenAt   DateTime @default(now())
-  signupSource String?  // utm_source/utm_medium/utm_campaign ou "direct"
+model UserConfig {
+  id                String @id @default(cuid())
+  userId            String @unique
+  includeRepos      Json? // string[] - repos selecionados para mostrar
+  excludeRepos      Json? // string[] - repos para esconder (deprecated)
+  customPreviewUrls Json? // Record<string, string> - URLs customizadas
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-  @@index([lastSeenAt])
+model Project {
+  id              String    @id @default(cuid())
+  userId          String
+  fullName        String // "username/repo"
+  name            String
+  descriptionHtml String?   @db.Text
+  language        String?
+  topics          Json? // string[]
+  stars           Int       @default(0)
+  pushedAt        DateTime?
+  homepageUrl     String?
+  previewUrl      String?
+  summary         String?   @db.Text // Max 800 chars
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, fullName])
+  @@index([userId])
+  @@index([fullName])
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  userId      String
+  slug        String
+  title       String
+  summary     String?  @db.Text
+  contentMdx  String   @db.Text // Max 20KB
+  tags        Json? // string[]
+  publishedAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, slug])
+  @@index([userId])
+  @@index([slug])
+  @@index([publishedAt])
 }

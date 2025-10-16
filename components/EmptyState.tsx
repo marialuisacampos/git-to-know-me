@@ -18,7 +18,6 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
       <div className="max-w-sm text-center space-y-4">
-        {/* Ícone */}
         <div className="flex justify-center">
           {icon === "folder" ? (
             <svg
@@ -51,13 +50,10 @@ export function EmptyState({
           )}
         </div>
 
-        {/* Título */}
         <h3 className="text-lg font-semibold text-slate-400">{title}</h3>
 
-        {/* Descrição */}
         <p className="text-sm text-slate-500">{description}</p>
 
-        {/* Action (opcional) */}
         {actionLabel && actionHref && (
           <Link
             href={actionHref}

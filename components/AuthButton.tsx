@@ -1,15 +1,17 @@
 "use client";
 
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/Button";
 import Image from "next/image";
 import { useState } from "react";
+import { useUserData } from "@/contexts/UserDataContext";
 
 export function AuthButton() {
   const { data: session, status } = useSession();
+  const { isLoading: isLoadingData } = useUserData();
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  if (status === "loading") {
+  if (status === "loading" || isLoadingData) {
     return (
       <Button disabled variant="outline" size="sm" className="h-8">
         <svg
@@ -37,9 +39,6 @@ export function AuthButton() {
   }
 
   if (session?.user) {
-    // Debug: mostrar session no console quando logado
-    console.log("Session:", session);
-
     return (
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
@@ -75,8 +74,7 @@ export function AuthButton() {
     setIsSigningIn(true);
     try {
       await signIn("github");
-    } catch (error) {
-      console.error("Erro ao fazer login:", error);
+    } catch {
       setIsSigningIn(false);
     }
   };

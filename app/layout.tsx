@@ -3,8 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { ToastProvider } from "@/components/ToastProvider";
-import ConsentBanner from "@/components/ConsentBanner";
-import TelemetryPing from "@/components/TelemetryPing";
+import { UserDataProvider } from "@/contexts/UserDataContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +31,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-slate-100`}
       >
         <SessionProvider>
-          {children}
-          <ToastProvider />
-          <ConsentBanner />
-          <TelemetryPing />
+          <UserDataProvider>
+            {children}
+            <ToastProvider />
+            {/* <ConsentBanner /> */}
+          </UserDataProvider>
         </SessionProvider>
       </body>
     </html>

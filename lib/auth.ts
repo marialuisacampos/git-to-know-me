@@ -3,7 +3,6 @@ import {
   getServerSession as nextGetServerSession,
 } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
-import { setUserRegistered } from "./kv";
 import { db } from "./db";
 
 interface GitHubProfile {
@@ -36,8 +35,7 @@ export const authOptions: NextAuthOptions = {
       const emailVerifiedAt = email ? new Date() : null;
 
       try {
-        // 1. Upsert User no Postgres
-        const user = await db.user.upsert({
+        await db.user.upsert({
           where: { githubId },
           update: {
             username,
@@ -57,56 +55,8 @@ export const authOptions: NextAuthOptions = {
             emailVerifiedAt,
           },
         });
-
-        // 2. Activity (firstSeenAt + lastSeenAt + signupSource)
-        const existingActivity = await db.activity.findUnique({
-          where: { userId: user.id },
-        });
-
-        // Capturar UTM dos cookies
-        let signupSource: string | null = null;
-        if (typeof window === "undefined") {
-          // Server-side
-          const { cookies: getCookies } = await import("next/headers");
-          const cookieStore = await getCookies();
-          const utmParams = ["utm_source", "utm_medium", "utm_campaign", "ref"]
-            .map((key) => {
-              const value = cookieStore.get(key)?.value;
-              return value ? `${key}=${value}` : null;
-            })
-            .filter(Boolean)
-            .join("&");
-
-          if (utmParams) {
-            signupSource = utmParams;
-          }
-        }
-
-        if (!existingActivity) {
-          await db.activity.create({
-            data: {
-              userId: user.id,
-              firstSeenAt: new Date(),
-              lastSeenAt: new Date(),
-              signupSource: signupSource || "direct",
-            },
-          });
-
-          console.log(
-            `[Auth] Primeiro login de ${username} - sync automático será disparado no dashboard`
-          );
-        } else {
-          await db.activity.update({
-            where: { userId: user.id },
-            data: { lastSeenAt: new Date() },
-          });
-        }
-
-        // 3. Manter compatibilidade com KV (marcar como registrado)
-        await setUserRegistered(username);
-      } catch (error) {
-        console.error("Erro ao persistir usuário no Postgres:", error);
-        // Não bloquear o login por erro de persistência
+      } catch {
+        return true;
       }
 
       return true;
@@ -133,7 +83,6 @@ export const authOptions: NextAuthOptions = {
 };
 
 export async function getServerSession() {
-  // Em dev, verificar se existe sessão fake
   if (process.env.NODE_ENV === "development") {
     const { cookies: getCookies } = await import("next/headers");
     const cookieStore = await getCookies();
@@ -142,8 +91,8 @@ export async function getServerSession() {
     if (devSession) {
       try {
         return JSON.parse(devSession.value);
-      } catch (error) {
-        console.error("Erro ao parsear dev-session:", error);
+      } catch {
+        return null;
       }
     }
   }

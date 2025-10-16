@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/Button";
 
 interface PreviewModalProps {
   url: string;
@@ -51,7 +51,6 @@ export function PreviewModal({
 
   return (
     <>
-      {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] transition-opacity duration-200 ${
           open ? "opacity-100" : "opacity-0"
@@ -59,7 +58,6 @@ export function PreviewModal({
         onClick={() => onOpenChange(false)}
       />
 
-      {/* Modal */}
       <div
         className={`fixed inset-0 z-[201] flex items-center justify-center p-4 transition-all duration-300 ease-out ${
           open
@@ -72,7 +70,6 @@ export function PreviewModal({
           onClick={(e) => e.stopPropagation()}
           className="w-full max-w-6xl h-[90vh] bg-slate-950 border border-slate-800/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         >
-          {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-slate-800/50 bg-slate-900/50 backdrop-blur-xl">
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
@@ -152,11 +149,9 @@ export function PreviewModal({
             </div>
           </div>
 
-          {/* Content */}
           <div className="flex-1 relative bg-slate-950">
             {!blocked ? (
               <>
-                {/* Loading overlay */}
                 <div className="absolute inset-0 flex items-center justify-center bg-slate-950 z-10">
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-8 h-8 border-2 border-slate-700 border-t-blue-500 rounded-full animate-spin" />
@@ -166,14 +161,12 @@ export function PreviewModal({
                   </div>
                 </div>
 
-                {/* Iframe */}
                 <iframe
                   src={url}
                   className="w-full h-full"
                   sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-popups"
                   referrerPolicy="no-referrer"
                   onLoad={(e) => {
-                    // Esconder loading quando carregar
                     const parent = e.currentTarget.parentElement;
                     const loading = parent?.querySelector(".absolute");
                     if (loading) loading.remove();
@@ -183,7 +176,6 @@ export function PreviewModal({
                 />
               </>
             ) : (
-              // Fallback quando iframe é bloqueado
               <div className="flex flex-col items-center justify-center h-full text-center p-8 space-y-6">
                 <div className="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center">
                   <svg
@@ -209,11 +201,7 @@ export function PreviewModal({
                     segurança (X-Frame-Options).
                   </p>
                 </div>
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-500 text-white"
-                >
+                <Button asChild size="lg" className="primary">
                   <a
                     href={url}
                     target="_blank"

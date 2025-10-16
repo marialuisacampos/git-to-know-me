@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/Button";
 
 interface ClaimProfileProps {
   username: string;
@@ -9,7 +9,6 @@ export function ClaimProfile({ username }: ClaimProfileProps) {
   return (
     <main className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
       <div className="max-w-lg text-center space-y-6">
-        {/* Ícone */}
         <div className="flex justify-center">
           <svg
             className="w-20 h-20 text-slate-800"
@@ -26,7 +25,6 @@ export function ClaimProfile({ username }: ClaimProfileProps) {
           </svg>
         </div>
 
-        {/* Título */}
         <div className="space-y-2">
           <h1 className="text-2xl md:text-3xl font-bold text-slate-100">
             Este perfil ainda não existe
@@ -34,19 +32,13 @@ export function ClaimProfile({ username }: ClaimProfileProps) {
           <p className="text-slate-500">@{username}</p>
         </div>
 
-        {/* Descrição */}
         <p className="text-slate-400 leading-relaxed">
           Para criar uma página pública e compartilhar seus projetos e artigos,
           entre com sua conta do GitHub e conecte seu perfil.
         </p>
 
-        {/* CTA */}
         <div className="pt-4">
-          <Button
-            asChild
-            size="lg"
-            className="bg-slate-800 hover:bg-slate-700 text-slate-100"
-          >
+          <Button asChild size="lg" variant="outline">
             <Link href="/api/auth/signin">
               <svg
                 className="w-5 h-5 mr-2"
@@ -60,7 +52,6 @@ export function ClaimProfile({ username }: ClaimProfileProps) {
           </Button>
         </div>
 
-        {/* Info adicional */}
         <p className="text-xs text-slate-600 pt-4">
           Você é @{username}?{" "}
           <Link

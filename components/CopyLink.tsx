@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/Button";
 
 interface CopyLinkProps {
   url: string;
@@ -21,8 +21,8 @@ export function CopyLink({
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error("Erro ao copiar:", error);
+    } catch {
+      setCopied(false);
     }
   }
 
@@ -31,7 +31,7 @@ export function CopyLink({
       onClick={handleCopy}
       variant={variant}
       size={size}
-      className="gap-2"
+      className="gap-2 w-full"
       aria-label={copied ? "Link copiado" : "Copiar link"}
     >
       {copied ? (

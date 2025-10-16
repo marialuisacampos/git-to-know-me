@@ -2,90 +2,57 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Button } from "@/components/base-ui/Button";
 
 export default function ConsentBanner() {
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [emailOptIn, setEmailOptIn] = useState(true); // Pré-selecionado por padrão
+  const [emailOptIn, setEmailOptIn] = useState(true);
 
   useEffect(() => {
-    // Só tentar buscar se estiver logado
     if (status === "loading") {
-      return; // Aguardar sessão carregar
+      return;
     }
 
     if (status === "unauthenticated" || !session?.user) {
       setLoading(false);
-      return; // Não mostrar para usuários não logados
+      return;
     }
-
-    // Usuário está logado, verificar consentimentos
-    console.log(
-      "[ConsentBanner] Verificando consentimentos para:",
-      session.user.username
-    );
 
     fetch("/api/consent")
       .then(async (r) => {
-        console.log("[ConsentBanner] Response status:", r.status);
-
         if (r.ok) {
           const { consents } = await r.json();
-          console.log("[ConsentBanner] Consents:", consents);
-
-          // Se não tiver consentido ainda, mostrar banner
           if (!consents?.privacyConsentAt || !consents?.tosAcceptedAt) {
-            console.log(
-              "[ConsentBanner] Mostrando banner - consentimentos pendentes"
-            );
             setOpen(true);
-          } else {
-            console.log("[ConsentBanner] Consentimentos já aceitos");
           }
-
-          // Pré-carregar estado do emailOptIn
           if (consents?.emailOptIn) {
             setEmailOptIn(true);
           }
         } else if (r.status === 404) {
-          // Usuário não existe no Postgres ainda (banco não configurado?)
-          console.warn("[ConsentBanner] Usuário não encontrado no banco (404)");
-          // Mostrar banner mesmo assim para coletar consentimento quando banco estiver pronto
           setOpen(true);
         } else {
-          console.error(
-            "[ConsentBanner] Erro ao buscar consentimentos:",
-            r.status
-          );
-          // Mostrar banner em caso de erro para garantir coleta de consentimento
           setOpen(true);
         }
 
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("[ConsentBanner] Erro na requisição:", error);
-        // Em caso de erro, mostrar banner para garantir consentimento
+      .catch(() => {
         setOpen(true);
         setLoading(false);
       });
   }, [session, status]);
 
-  // Não mostrar enquanto carrega a sessão
   if (status === "loading" || loading) return null;
 
-  // Não mostrar para usuários não logados
   if (!session?.user) return null;
 
-  // Não mostrar se não precisa consentimento
   if (!open) return null;
 
   const onAccept = async () => {
     try {
-      console.log("[ConsentBanner] Salvando consentimentos...", { emailOptIn });
-
       const response = await fetch("/api/consent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,31 +64,23 @@ export default function ConsentBanner() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("[ConsentBanner] Consentimentos salvos:", data);
         setOpen(false);
       } else {
-        const error = await response.json();
-        console.error(
-          "[ConsentBanner] Erro ao salvar:",
-          response.status,
-          error
-        );
-
-        // Se o erro for por falta de banco, avisar o usuário
         if (response.status === 404 || response.status === 500) {
-          alert(
-            "Banco de dados não configurado. Configure DATABASE_URL e rode: npx prisma migrate dev"
-          );
+          toast.error("Erro de configuração", {
+            description:
+              "Banco de dados não configurado. Configure DATABASE_URL e rode: npx prisma migrate dev",
+          });
         } else {
-          alert("Erro ao salvar consentimentos. Tente novamente.");
+          toast.error("Erro ao salvar consentimentos", {
+            description: "Tente novamente.",
+          });
         }
       }
-    } catch (error) {
-      console.error("[ConsentBanner] Erro ao salvar consentimentos:", error);
-      alert(
-        "Erro ao salvar consentimentos. Verifique o console para mais detalhes."
-      );
+    } catch {
+      toast.error("Erro ao salvar consentimentos", {
+        description: "Tente novamente mais tarde.",
+      });
     }
   };
 
@@ -133,7 +92,6 @@ export default function ConsentBanner() {
                  animate-in fade-in slide-in-from-bottom-4 duration-500"
     >
       <div className="space-y-3">
-        {/* Header */}
         <div className="flex items-start gap-2.5">
           <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
             <svg
@@ -161,7 +119,6 @@ export default function ConsentBanner() {
           </div>
         </div>
 
-        {/* Checkbox */}
         <label className="flex items-start gap-2.5 cursor-pointer group">
           <input
             type="checkbox"
@@ -181,26 +138,15 @@ export default function ConsentBanner() {
           </div>
         </label>
 
-        {/* Actions */}
         <div className="flex items-center justify-end gap-2 pt-1">
-          <Button
-            onClick={() => setOpen(false)}
-            variant="ghost"
-            size="sm"
-            className="text-slate-500 hover:text-slate-200 h-8 text-xs"
-          >
+          <Button onClick={() => setOpen(false)} variant="ghost" size="sm">
             Agora não
           </Button>
-          <Button
-            onClick={onAccept}
-            size="sm"
-            className="bg-blue-600/90 hover:bg-blue-600 text-white h-8 text-xs"
-          >
+          <Button onClick={onAccept} size="sm" variant="primary">
             Aceitar
           </Button>
         </div>
 
-        {/* Footer links */}
         <div className="flex items-center justify-center gap-3 pt-2 border-t border-slate-800/50">
           <a
             href="/privacy"

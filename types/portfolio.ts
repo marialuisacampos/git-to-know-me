@@ -3,6 +3,9 @@ export type UserConfig = {
   includeRepos?: string[];
   excludeRepos?: string[];
   customPreviewUrls?: Record<string, string>; // { repoName: customUrl }
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  instagramUrl?: string;
 };
 
 export type ProjectMeta = {

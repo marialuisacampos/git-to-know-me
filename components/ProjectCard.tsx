@@ -25,10 +25,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
     <>
       <div className="group relative w-full overflow-hidden rounded-xl transition-all duration-300 hover:scale-[1.01]">
-        {/* Glass card */}
         <div className="relative h-full bg-slate-900/30 backdrop-blur-xl border border-slate-800/50 group-hover:border-slate-700/80 rounded-xl transition-all duration-300">
           <div className="relative p-5 space-y-3">
-            {/* Header */}
             <button
               onClick={onClick}
               className="w-full text-left focus:outline-none"
@@ -38,7 +36,6 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               </h3>
             </button>
 
-            {/* Language badge */}
             {project.language && (
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/40 border border-slate-700/30">
                 <span className="w-2 h-2 rounded-full bg-blue-400/70" />
@@ -48,7 +45,6 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               </div>
             )}
 
-            {/* Topics */}
             {project.topics && project.topics.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {project.topics.slice(0, 3).map((topic) => (
@@ -67,7 +63,6 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               </div>
             )}
 
-            {/* Action buttons */}
             <div className="flex flex-wrap gap-2 pt-1">
               {hasPreview && (
                 <button
@@ -123,7 +118,6 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               </button>
             </div>
 
-            {/* Footer date */}
             <div className="pt-2">
               <p className="text-xs text-slate-600">{updatedAt}</p>
             </div>
@@ -131,7 +125,6 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         </div>
       </div>
 
-      {/* Preview Modal */}
       {hasPreview && project.previewUrl && (
         <PreviewModal
           url={project.previewUrl}

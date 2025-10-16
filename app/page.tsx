@@ -1,28 +1,16 @@
 import { getServerSession } from "@/lib/auth";
 import { AuthButton } from "@/components/AuthButton";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/Button";
 import Image from "next/image";
+import { BackgroundAnimation } from "@/components/BackgroundAnimation";
 
 export default async function Home() {
   const session = await getServerSession();
 
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-blue-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDuration: "8s" }}
-        />
-        <div
-          className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-purple-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDuration: "12s", animationDelay: "2s" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-1/3 bg-cyan-500/3 rounded-full blur-3xl animate-pulse"
-          style={{ animationDuration: "15s", animationDelay: "4s" }}
-        />
-      </div>
+      <BackgroundAnimation />
 
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
         <header className="pt-6 pb-12 flex justify-between items-center animate-in fade-in duration-500 ease-out">

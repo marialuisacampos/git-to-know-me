@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import type { ProjectMeta } from "@/types/portfolio";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/Button";
+import { MarkdownPreview } from "@/components/MarkdownPreview";
 
 interface ProjectModalProps {
   project: ProjectMeta;
@@ -11,7 +12,6 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
-  // Fechar com ESC
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -37,12 +37,10 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150 motion-reduce:animate-none"
       onClick={onClose}
     >
-      {/* Modal */}
       <div
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-3xl max-h-[85vh] bg-slate-900 border border-slate-800 rounded-lg shadow-xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-150 motion-reduce:animate-none"
       >
-        {/* Header */}
         <div className="flex items-start justify-between p-5 border-b border-slate-800">
           <div className="flex-1 min-w-0 pr-4">
             <h2 className="text-xl font-bold text-slate-100 mb-2 truncate">
@@ -72,7 +70,6 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
             </div>
           </div>
 
-          {/* Botão fechar */}
           <button
             onClick={onClose}
             className="text-slate-500 hover:text-slate-300 transition-colors"
@@ -88,7 +85,6 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           </button>
         </div>
 
-        {/* Topics */}
         {project.topics && project.topics.length > 0 && (
           <div className="px-5 py-3 border-b border-slate-800 bg-slate-900/50">
             <div className="flex flex-wrap gap-1.5">
@@ -104,20 +100,9 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           </div>
         )}
 
-        {/* Content: README */}
         <div className="flex-1 overflow-y-auto p-5">
           {project.descriptionHtml ? (
-            <div
-              className="prose prose-invert prose-slate prose-sm max-w-none
-                prose-headings:text-slate-100 prose-headings:font-semibold
-                prose-p:text-slate-400 prose-p:leading-relaxed
-                prose-a:text-slate-300 prose-a:underline prose-a:decoration-slate-700 hover:prose-a:decoration-slate-500
-                prose-code:text-slate-300 prose-code:bg-slate-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs
-                prose-pre:bg-slate-800/50 prose-pre:border prose-pre:border-slate-700 prose-pre:rounded
-                prose-strong:text-slate-300
-                prose-ul:text-slate-400 prose-ol:text-slate-400 prose-li:text-slate-400"
-              dangerouslySetInnerHTML={{ __html: project.descriptionHtml }}
-            />
+            <MarkdownPreview source={project.descriptionHtml} isReadme />
           ) : (
             <div className="text-center py-12">
               <p className="text-slate-600 text-sm">README não disponível</p>
@@ -125,34 +110,12 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           )}
         </div>
 
-        {/* Footer: Ações */}
         <div className="flex gap-2 p-5 border-t border-slate-800 bg-slate-900/50">
-          <Button
-            asChild
-            size="sm"
-            className="flex-1 bg-slate-800 hover:bg-slate-700 border-0"
-          >
+          <Button asChild size="sm" variant="outline" className="w-full">
             <a href={githubUrl} target="_blank" rel="noopener noreferrer">
               Ver no GitHub
             </a>
           </Button>
-
-          {project.homepageUrl && (
-            <Button
-              asChild
-              size="sm"
-              variant="outline"
-              className="border-slate-700 hover:bg-slate-800"
-            >
-              <a
-                href={project.homepageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Website
-              </a>
-            </Button>
-          )}
         </div>
       </div>
     </div>
