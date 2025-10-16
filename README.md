@@ -8,9 +8,9 @@ git-to-know-me automatically syncs your GitHub projects and blog posts, creating
 
 ## Stack
 
-- **Framework**: Next.js 15 (App Router, React Server Components)
+- **Framework**: Next.js 15
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
+- **Styling**: Tailwind 4
 - **Database**: PostgreSQL + Prisma ORM
 - **Authentication**: NextAuth.js (GitHub OAuth)
 - **Markdown**: @uiw/react-markdown-preview + rehype-sanitize
@@ -21,14 +21,11 @@ git-to-know-me automatically syncs your GitHub projects and blog posts, creating
 
 ## Features
 
-### Core
-
 - GitHub OAuth authentication
 - Automatic project sync from GitHub
 - Blog posts from `blog-posts` repository
 - Custom bio and social links (Twitter, LinkedIn, Instagram)
-- Repository filtering (include/exclude)
-- Manual preview URLs for projects
+- Preview for projects
 - Responsive design with glassmorphism effects
 
 ### Security
@@ -89,8 +86,6 @@ npx prisma generate
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
-
 ## Scripts
 
 ```bash
@@ -123,8 +118,7 @@ npm run test:coverage # Tests with coverage
 
 ## Roadmap
 
-- [ ] Internationalization (i18n) for blog posts
-- [ ] Custom themes and color schemes
+- [ ] Internationalization (i18n) for profile and blog posts
 - [ ] Analytics dashboard
 - [ ] Project categories and tags
 - [ ] RSS feed for blog
@@ -148,13 +142,8 @@ Contributions are welcome! Please follow these steps:
 
 - Clean, self-documenting code
 - No unnecessary comments
-- TypeScript strict mode
 - ESLint + Prettier compliant
 - Unit tests for critical logic
-
-## License
-
-MIT License - feel free to use this project for your own portfolio.
 
 ## Acknowledgments
 
