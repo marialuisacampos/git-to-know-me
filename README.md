@@ -1,0 +1,150 @@
+# git-to-know-me
+
+A modern portfolio platform that transforms your GitHub repositories into a beautiful, personalized website.
+
+## About
+
+git-to-know-me automatically syncs your GitHub projects and blog posts, creating a professional portfolio without any manual setup. Just log in with GitHub and your portfolio is ready to share.
+
+## Stack
+
+- **Framework**: Next.js 15
+- **Language**: TypeScript
+- **Styling**: Tailwind 4
+- **Database**: PostgreSQL + Prisma ORM
+- **Authentication**: NextAuth.js (GitHub OAuth)
+- **Markdown**: @uiw/react-markdown-preview + rehype-sanitize
+- **UI Components**: Radix UI primitives
+- **Notifications**: Sonner
+- **Validation**: Zod
+- **Testing**: Jest + Testing Library
+
+## Features
+
+- GitHub OAuth authentication
+- Automatic project sync from GitHub
+- Blog posts from `blog-posts` repository
+- Custom bio and social links (Twitter, LinkedIn, Instagram)
+- Preview for projects
+- Responsive design with glassmorphism effects
+
+### Security
+
+- XSS protection with rehype-sanitize
+- URL validation (http/https only)
+- CSRF protection via NextAuth
+- Sanitized markdown rendering
+
+### UX
+
+- Auto-sync on first login
+- Toast notifications
+- Loading states
+- Minimal, Apple-inspired design
+- Smooth animations with reduced-motion support
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL database
+- GitHub OAuth App
+- GitHub Personal Access Token (optional, for higher API rate limits)
+
+### Installation
+
+```bash
+npm install
+```
+
+### Environment Variables
+
+Create a `.env.local` file:
+
+```bash
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
+
+GITHUB_ID=your_github_oauth_app_id
+GITHUB_SECRET=your_github_oauth_app_secret
+GITHUB_PAT=ghp_your_personal_access_token
+
+DATABASE_URL=postgresql://user:password@localhost:5432/git-to-know-me
+```
+
+### Database Setup
+
+```bash
+npx prisma migrate dev
+npx prisma generate
+```
+
+### Run Development Server
+
+```bash
+npm run dev
+```
+
+## Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run check        # TypeScript + ESLint
+npm test             # Run tests
+npm run test:watch   # Tests in watch mode
+npm run test:coverage # Tests with coverage
+```
+
+## Project Structure
+
+```
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   ├── dashboard/         # User dashboard
+│   └── u/[username]/      # Public user pages
+├── components/            # React components
+├── contexts/              # React contexts
+├── lib/                   # Core logic
+│   ├── db/               # Database operations
+│   └── github.ts         # GitHub API integration
+├── prisma/               # Database schema & migrations
+├── types/                # TypeScript types
+└── __tests__/            # Unit tests
+```
+
+## Roadmap
+
+- [ ] Internationalization (i18n) for profile and blog posts
+- [ ] Analytics dashboard
+- [ ] Project categories and tags
+- [ ] RSS feed for blog
+- [ ] SEO optimization
+- [ ] PWA support
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests (`npm test`)
+5. Run checks (`npm run check`)
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
+
+### Code Style
+
+- Clean, self-documenting code
+- No unnecessary comments
+- ESLint + Prettier compliant
+- Unit tests for critical logic
+
+## Acknowledgments
+
+Built with modern web technologies and a focus on performance, security, and user experience.

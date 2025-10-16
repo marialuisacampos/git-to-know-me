@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #020617;
+  --color-foreground: #f1f5f9;
+
+  --color-card: #0f172a;
+  --color-card-foreground: #f1f5f9;
+
+  --color-popover: #0f172a;
+  --color-popover-foreground: #f1f5f9;
+
+  --color-primary: #f1f5f9;
+  --color-primary-foreground: #0f172a;
+
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f1f5f9;
+
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+
+  --color-accent: #1e293b;
+  --color-accent-foreground: #f1f5f9;
+
+  --color-destructive: #7f1d1d;
+  --color-destructive-foreground: #f1f5f9;
+
+  --color-border: #1e293b;
+  --color-input: #1e293b;
+  --color-ring: #cbd5e1;
+
+  --radius: 0.5rem;
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Markdown Preview Styles */
+.markdown-preview {
+  @apply text-slate-300;
+}
+
+.markdown-preview h1 {
+  @apply text-3xl font-bold tracking-tight text-slate-100 mb-6 mt-8 border-b border-slate-800/30 pb-3;
+}
+
+.markdown-preview h2 {
+  @apply text-2xl font-bold tracking-tight text-slate-100 mb-4 mt-8 border-b border-slate-800/20 pb-2;
+}
+
+.markdown-preview h3 {
+  @apply text-xl font-bold tracking-tight text-slate-100 mb-3 mt-6;
+}
+
+.markdown-preview h4 {
+  @apply text-lg font-bold text-slate-100 mb-2 mt-4;
+}
+
+.markdown-preview h5 {
+  @apply text-base font-semibold text-slate-100 mb-2 mt-4;
+}
+
+.markdown-preview h6 {
+  @apply text-sm font-semibold text-slate-400 mb-2 mt-3;
+}
+
+.markdown-preview p {
+  @apply text-slate-300 leading-relaxed mb-4;
+}
+
+.markdown-preview a {
+  @apply text-blue-400 underline decoration-blue-400/30 hover:decoration-blue-400 transition-all underline-offset-2;
+}
+
+.markdown-preview strong {
+  @apply text-slate-100 font-semibold;
+}
+
+.markdown-preview em {
+  @apply text-slate-300 italic;
+}
+
+.markdown-preview code {
+  @apply text-pink-400 bg-slate-800/80 px-2 py-1 rounded text-sm font-mono;
+}
+
+.markdown-preview pre {
+  @apply bg-slate-950/50 border border-slate-700/50 rounded-lg p-4 overflow-x-auto my-6 shadow-lg;
+}
+
+.markdown-preview pre code {
+  @apply bg-transparent px-0 py-0 text-sm;
+}
+
+.markdown-preview ul {
+  @apply text-slate-300 my-4 list-disc pl-6;
+}
+
+.markdown-preview ol {
+  @apply text-slate-300 my-4 list-decimal pl-6;
+}
+
+.markdown-preview li {
+  @apply text-slate-300 my-1.5 leading-relaxed;
+}
+
+.markdown-preview blockquote {
+  @apply border-l-4 border-purple-500/40 pl-4 py-0.5 text-slate-400 italic my-6 bg-purple-500/5;
+}
+
+.markdown-preview img {
+  @apply rounded-lg border border-slate-700/50 my-6 shadow-xl w-full;
+}
+
+.markdown-preview hr {
+  @apply border-slate-800/50 my-8;
+}
+
+.markdown-preview table {
+  @apply w-full border-collapse my-6;
+}
+
+.markdown-preview thead {
+  @apply border-b-2 border-slate-700;
+}
+
+.markdown-preview th {
+  @apply px-4 py-2 text-left font-semibold text-slate-200;
+}
+
+.markdown-preview td {
+  @apply px-4 py-2 border-b border-slate-800/50 text-slate-300;
+}
+
+.markdown-preview tr:hover {
+  @apply bg-slate-800/20;
+}
+
+.markdown-preview input[type="checkbox"] {
+  @apply mr-2 accent-purple-500;
+}
+
+/* Markdown Preview Small (para READMEs em modais) */
+.markdown-preview-sm {
+  @apply text-slate-300 text-sm;
+}
+
+.markdown-preview-sm h1 {
+  @apply text-2xl font-bold tracking-tight text-slate-100 mb-4 mt-6 border-b border-slate-800/30 pb-2;
+}
+
+.markdown-preview-sm h2 {
+  @apply text-xl font-bold tracking-tight text-slate-100 mb-3 mt-5 border-b border-slate-800/20 pb-1.5;
+}
+
+.markdown-preview-sm h3 {
+  @apply text-lg font-bold tracking-tight text-slate-100 mb-2 mt-4;
+}
+
+.markdown-preview-sm h4 {
+  @apply text-base font-bold text-slate-100 mb-2 mt-3;
+}
+
+.markdown-preview-sm h5 {
+  @apply text-sm font-semibold text-slate-100 mb-1.5 mt-3;
+}
+
+.markdown-preview-sm h6 {
+  @apply text-xs font-semibold text-slate-400 mb-1.5 mt-2;
+}
+
+.markdown-preview-sm p {
+  @apply text-slate-300 leading-relaxed mb-3;
+}
+
+.markdown-preview-sm pre {
+  @apply bg-slate-950/50 border border-slate-700/50 rounded-lg p-3 overflow-x-auto my-4;
+}
+
+.markdown-preview-sm ul,
+.markdown-preview-sm ol {
+  @apply my-3 pl-5;
+}
+
+.markdown-preview-sm li {
+  @apply my-1;
+}
+
+.markdown-preview-sm blockquote {
+  @apply my-4;
+}
+
+.markdown-preview-sm img {
+  @apply my-4;
+}
+
+.markdown-preview-sm table {
+  @apply my-4 text-sm;
+}
