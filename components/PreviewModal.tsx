@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { HiEye, HiExternalLink, HiX, HiExclamation } from "react-icons/hi";
 import { Button } from "@/components/base-ui/Button";
 
 interface PreviewModalProps {
@@ -73,25 +74,7 @@ export function PreviewModal({
           <div className="flex items-center justify-between p-4 border-b border-slate-800/50 bg-slate-900/50 backdrop-blur-xl">
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
-                <svg
-                  className="w-4 h-4 text-blue-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+                <HiEye className="w-4 h-4 text-blue-400" />
               </div>
               <div className="flex-1 min-w-0">
                 <h2 className="text-sm font-bold text-slate-100 truncate">
@@ -113,19 +96,7 @@ export function PreviewModal({
                   rel="noopener noreferrer"
                   className="flex items-center gap-2"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
+                  <HiExternalLink className="w-4 h-4" />
                   Nova aba
                 </a>
               </Button>
@@ -134,17 +105,7 @@ export function PreviewModal({
                 className="text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg p-2 transition-all duration-150"
                 aria-label="Fechar preview"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <HiX className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -178,19 +139,7 @@ export function PreviewModal({
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center p-8 space-y-6">
                 <div className="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center">
-                  <svg
-                    className="w-8 h-8 text-slate-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                    />
-                  </svg>
+                  <HiExclamation className="w-8 h-8 text-slate-500" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold text-slate-100">
@@ -208,19 +157,7 @@ export function PreviewModal({
                     rel="noopener noreferrer"
                     className="flex items-center gap-2"
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
+                    <HiExternalLink className="w-5 h-5" />
                     Abrir em nova aba
                   </a>
                 </Button>
