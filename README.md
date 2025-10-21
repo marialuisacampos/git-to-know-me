@@ -2,8 +2,6 @@
 
 <img width="2048" height="1077" alt="image" src="https://github.com/user-attachments/assets/d751ab21-94fa-4133-9ec8-f13e90163af6" />
 
-
-
 A modern portfolio platform that transforms your GitHub repositories into a beautiful, personalized website. - www.gittoknowme.com.br
 
 ## About
@@ -80,79 +78,6 @@ Creating your portfolio is simple:
 - Minimal, Apple-inspired design
 - Smooth animations with reduced-motion support
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL database
-- GitHub OAuth App
-- GitHub Personal Access Token (optional, for higher API rate limits)
-
-### Installation
-
-```bash
-npm install
-```
-
-### Environment Variables
-
-Create a `.env.local` file:
-
-```bash
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
-
-GITHUB_ID=your_github_oauth_app_id
-GITHUB_SECRET=your_github_oauth_app_secret
-GITHUB_PAT=ghp_your_personal_access_token
-
-DATABASE_URL=postgresql://user:password@localhost:5432/git-to-know-me
-```
-
-### Database Setup
-
-```bash
-npx prisma migrate dev
-npx prisma generate
-```
-
-### Run Development Server
-
-```bash
-npm run dev
-```
-
-## Scripts
-
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run check        # TypeScript + ESLint
-npm test             # Run tests
-npm run test:watch   # Tests in watch mode
-npm run test:coverage # Tests with coverage
-```
-
-## Project Structure
-
-```
-├── app/                    # Next.js App Router
-│   ├── api/               # API routes
-│   ├── dashboard/         # User dashboard
-│   └── u/[username]/      # Public user pages
-├── components/            # React components
-├── contexts/              # React contexts
-├── lib/                   # Core logic
-│   ├── db/               # Database operations
-│   └── github.ts         # GitHub API integration
-├── prisma/               # Database schema & migrations
-├── types/                # TypeScript types
-└── __tests__/            # Unit tests
-```
-
 ## Roadmap
 
 - [ ] Internationalization (i18n) for profile and blog posts
@@ -161,27 +86,3 @@ npm run test:coverage # Tests with coverage
 - [ ] RSS feed for blog
 - [ ] SEO optimization
 - [ ] PWA support
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests (`npm test`)
-5. Run checks (`npm run check`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-### Code Style
-
-- Clean, self-documenting code
-- No unnecessary comments
-- ESLint + Prettier compliant
-- Unit tests for critical logic
-
-## Acknowledgments
-
-Built with modern web technologies and a focus on performance, security, and user experience.
