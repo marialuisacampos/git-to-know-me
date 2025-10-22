@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { HiLockClosed } from "react-icons/hi";
 import { Button } from "@/components/base-ui/Button";
 
 export default function ConsentBanner() {
@@ -94,19 +95,7 @@ export default function ConsentBanner() {
       <div className="space-y-3">
         <div className="flex items-start gap-2.5">
           <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-            <svg
-              className="w-4 h-4 text-blue-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
+            <HiLockClosed className="w-4 h-4 text-blue-400" />
           </div>
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-slate-100 mb-0.5">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HiChevronRight } from "react-icons/hi";
 import type { PostMeta } from "@/types/portfolio";
 
 interface PostCardProps {
@@ -57,19 +58,7 @@ export function PostCard({ post, username }: PostCardProps) {
 
           <div className="flex items-center gap-1.5 pt-1 text-xs text-slate-500 group-hover:text-slate-400 transition-colors duration-300">
             <span>Ler artigo</span>
-            <svg
-              className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+            <HiChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300" />
           </div>
         </div>
       </div>

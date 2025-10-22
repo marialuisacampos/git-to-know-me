@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 interface NavUserProps {
   username: string;
@@ -17,19 +18,7 @@ export function NavUser({ username, currentPage }: NavUserProps) {
             href={`/u/${username}`}
             className="inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition-colors group"
           >
-            <svg
-              className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform motion-reduce:transition-none"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
+            <HiChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform motion-reduce:transition-none" />
             Voltar
           </Link>
         )}
@@ -63,19 +52,7 @@ export function NavUser({ username, currentPage }: NavUserProps) {
         className="group flex items-center gap-1 text-xs text-slate-600 hover:text-slate-400 transition-colors duration-150"
       >
         <span>Crie o seu</span>
-        <svg
-          className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <HiChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
       </Link>
     </nav>
   );
