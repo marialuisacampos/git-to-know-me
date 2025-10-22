@@ -24,11 +24,9 @@ export async function syncGitHubAction() {
       sort: "updated",
     });
 
-    const publicRepos = repos
-      .filter(
-        (repo) => !repo.fork && !repo.private && repo.name !== "blog-posts"
-      )
-      .slice(0, 20);
+    const publicRepos = repos.filter(
+      (repo) => !repo.fork && !repo.private && repo.name !== "blog-posts"
+    );
 
     const projectsPromises = publicRepos.map(async (repo) => {
       let descriptionHtml = "";

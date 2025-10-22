@@ -195,7 +195,7 @@ This is my story...`
 
       expect(syncResult).toMatchObject({
         success: "Sincronização concluída!",
-        projects: 20,
+        projects: 30,
         posts: 0,
       });
 

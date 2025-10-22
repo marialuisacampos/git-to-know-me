@@ -183,7 +183,7 @@ describe("Sync GitHub API Route", () => {
       expect(mockSetUserPosts).toHaveBeenCalledWith("testuser", []);
     });
 
-    it("should limit to 20 repositories", async () => {
+    it("should sync all public repositories without limit", async () => {
       mockGetServerSession.mockResolvedValue({
         user: { username: "testuser" },
         expires: "2025-12-31",
@@ -211,7 +211,7 @@ describe("Sync GitHub API Route", () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.projects).toBe(20);
+      expect(data.projects).toBe(50);
       expect(mockSetUserProjects).toHaveBeenCalledWith(
         "testuser",
         expect.arrayContaining([expect.objectContaining({ name: "repo0" })])

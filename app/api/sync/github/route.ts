@@ -25,10 +25,9 @@ export async function POST() {
     const username = session.user.username;
 
     const repos = await listPublicRepos(username);
-    const reposToSync = repos.slice(0, 20);
 
     const projectsWithReadme = await Promise.allSettled(
-      reposToSync.map(async (repo) => {
+      repos.map(async (repo) => {
         const [owner, repoName] = repo.fullName.split("/");
         const readmeHtml = await getReadmeHtml(owner, repoName);
 
