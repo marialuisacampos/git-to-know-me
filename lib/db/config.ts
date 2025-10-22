@@ -13,7 +13,6 @@ export async function getUserConfig(username: string): Promise<UserConfig> {
         config: {
           select: {
             includeRepos: true,
-            excludeRepos: true,
             customPreviewUrls: true,
           },
         },
@@ -34,9 +33,7 @@ export async function getUserConfig(username: string): Promise<UserConfig> {
       includeRepos: config?.includeRepos
         ? (config.includeRepos as string[])
         : undefined,
-      excludeRepos: config?.excludeRepos
-        ? (config.excludeRepos as string[])
-        : undefined,
+      excludeRepos: undefined,
       customPreviewUrls: config?.customPreviewUrls
         ? (config.customPreviewUrls as Record<string, string>)
         : undefined,

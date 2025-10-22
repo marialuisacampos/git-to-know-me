@@ -198,3 +198,25 @@ body {
 .markdown-preview-sm table {
   @apply my-4 text-sm;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-900/50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-700/80 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-600;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(51 65 85 / 0.8) rgb(15 23 42 / 0.5);
+}

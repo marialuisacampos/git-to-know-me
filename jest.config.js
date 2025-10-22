@@ -20,6 +20,12 @@ const customJestConfig = {
     "!**/node_modules/**",
     "!**/.next/**",
   ],
+  testEnvironmentOptions: {
+    customExportConditions: [""],
+  },
+  transformIgnorePatterns: [
+    "node_modules/(?!(jose|openid-client|next-auth|@panva|@octokit|universal-user-agent|before-after-hook)/)",
+  ],
 };
 
 module.exports = createJestConfig(customJestConfig);

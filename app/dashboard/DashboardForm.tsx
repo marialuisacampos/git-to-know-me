@@ -1,29 +1,90 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useTransition, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { z } from "zod";
-import { HiRefresh, HiEye, HiExternalLink, HiCheck } from "react-icons/hi";
+import { useFormStatus } from "react-dom";
+import {
+  HiRefresh,
+  HiEye,
+  HiExternalLink,
+  HiCheck,
+  HiSearch,
+} from "react-icons/hi";
 import { FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Button } from "@/components/base-ui/Button";
 import { Textarea } from "@/components/base-ui/TextArea";
-import { Switch } from "@/components/base-ui/Switch";
+import { updateConfigAction } from "@/app/actions/config";
+import { syncGitHubAction } from "@/app/actions/sync";
 import type { UserConfig, ProjectMeta } from "@/types/portfolio";
-
-const configSchema = z.object({
-  bio: z
-    .string()
-    .max(240, "Bio deve ter no máximo 240 caracteres")
-    .optional()
-    .or(z.literal("")),
-});
 
 interface DashboardFormProps {
   username: string;
   initialConfig: UserConfig;
   projects: ProjectMeta[];
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" disabled={pending} variant="primary" size="sm">
+      {pending ? (
+        <>
+          <AiOutlineLoading className="w-4 h-4 mr-1.5 animate-spin" />
+          Salvando...
+        </>
+      ) : (
+        <>
+          <HiCheck className="w-4 h-4 mr-1.5" />
+          Salvar
+        </>
+      )}
+    </Button>
+  );
+}
+
+function SyncButton() {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleSync = async () => {
+    startTransition(async () => {
+      const result = await syncGitHubAction();
+
+      if (result.success) {
+        toast.success(result.success, {
+          description: `${result.projects} projetos e ${result.posts} posts atualizados.`,
+        });
+        router.refresh();
+      } else {
+        toast.error(result.error || "Erro ao sincronizar");
+      }
+    });
+  };
+
+  return (
+    <Button
+      type="button"
+      onClick={handleSync}
+      disabled={isPending}
+      size="sm"
+      variant="primary"
+    >
+      {isPending ? (
+        <>
+          <AiOutlineLoading className="w-4 h-4 mr-1.5 animate-spin" />
+          Sincronizando...
+        </>
+      ) : (
+        <>
+          <HiRefresh className="w-4 h-4 mr-1.5" />
+          Sincronizar
+        </>
+      )}
+    </Button>
+  );
 }
 
 export function DashboardForm({
@@ -32,131 +93,57 @@ export function DashboardForm({
   projects,
 }: DashboardFormProps) {
   const router = useRouter();
+  const [state, formAction] = useActionState(updateConfigAction, null);
 
-  const [bio, setBio] = useState(initialConfig.bio || "");
-  const [twitterUrl, setTwitterUrl] = useState(initialConfig.twitterUrl || "");
-  const [linkedinUrl, setLinkedinUrl] = useState(
-    initialConfig.linkedinUrl || ""
+  const displayableProjects = projects.filter(
+    (project) => project.name !== "blog-posts"
   );
-  const [instagramUrl, setInstagramUrl] = useState(
-    initialConfig.instagramUrl || ""
-  );
-  const [selectedRepos, setSelectedRepos] = useState<string[]>(
-    initialConfig.includeRepos || []
-  );
+
   const [customPreviewUrls, setCustomPreviewUrls] = useState<
     Record<string, string>
   >(initialConfig.customPreviewUrls || {});
-  const [isSaving, setIsSaving] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRepos, setSelectedRepos] = useState<Set<string>>(
+    new Set(
+      initialConfig.includeRepos || displayableProjects.map((p) => p.name)
+    )
+  );
 
-  const charCount = bio.length;
-  const charLimit = 240;
+  const filteredProjects = displayableProjects.filter((project) =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  async function handleSave() {
-    setIsSaving(true);
+  const handleSelectAll = () => {
+    setSelectedRepos(new Set(filteredProjects.map((p) => p.name)));
+  };
 
-    try {
-      const config: Partial<UserConfig> = {
-        bio: bio || undefined,
-        twitterUrl: twitterUrl || undefined,
-        linkedinUrl: linkedinUrl || undefined,
-        instagramUrl: instagramUrl || undefined,
-        includeRepos: selectedRepos.length > 0 ? selectedRepos : undefined,
-        excludeRepos: undefined,
-      };
+  const handleDeselectAll = () => {
+    setSelectedRepos(new Set());
+  };
 
-      const filteredPreviewUrls: Record<string, string> = {};
-      Object.entries(customPreviewUrls).forEach(([repo, url]) => {
-        if (url && url.trim()) {
-          filteredPreviewUrls[repo] = url.trim();
-        }
-      });
-      config.customPreviewUrls =
-        Object.keys(filteredPreviewUrls).length > 0
-          ? filteredPreviewUrls
-          : undefined;
-
-      const validation = configSchema.safeParse(config);
-
-      if (!validation.success) {
-        const firstError = validation.error.issues[0];
-        toast.error("Validação falhou", {
-          description: firstError.message,
-        });
-        setIsSaving(false);
-        return;
-      }
-
-      const res = await fetch("/api/config", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(config),
-        credentials: "include",
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success("Configurações salvas!", {
-          description: "Suas alterações foram aplicadas com sucesso.",
-        });
-        router.refresh();
-      } else {
-        toast.error("Erro ao salvar", {
-          description: data.error || "Tente novamente.",
-        });
-      }
-    } catch {
-      toast.error("Erro de conexão", {
-        description: "Não foi possível salvar as configurações.",
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  }
-
-  async function handleSync() {
-    setIsSyncing(true);
-
-    try {
-      const res = await fetch("/api/sync/github", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success("Sincronização concluída!", {
-          description: `${data.projects} projetos e ${data.posts} posts atualizados.`,
-        });
-        router.refresh();
-      } else {
-        toast.error("Erro ao sincronizar", {
-          description: data.error || "Tente novamente.",
-        });
-      }
-    } catch {
-      toast.error("Erro de conexão", {
-        description: "Não foi possível sincronizar com o GitHub.",
-      });
-    } finally {
-      setIsSyncing(false);
-    }
-  }
-
-  function toggleRepo(repoName: string) {
-    if (selectedRepos.includes(repoName)) {
-      setSelectedRepos(selectedRepos.filter((r) => r !== repoName));
+  const toggleRepo = (repoName: string) => {
+    const newSelected = new Set(selectedRepos);
+    if (newSelected.has(repoName)) {
+      newSelected.delete(repoName);
     } else {
-      setSelectedRepos([...selectedRepos, repoName]);
+      newSelected.add(repoName);
     }
-  }
+    setSelectedRepos(newSelected);
+  };
 
-  function isRepoSelected(repoName: string): boolean {
-    return selectedRepos.includes(repoName);
-  }
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.success, {
+        description: "Suas alterações foram aplicadas com sucesso.",
+      });
+      router.refresh();
+    }
+    if (state?.error) {
+      toast.error("Erro ao salvar", {
+        description: state.error,
+      });
+    }
+  }, [state, router]);
 
   return (
     <div className="space-y-6">
@@ -171,248 +158,266 @@ export function DashboardForm({
             </p>
           </div>
 
-          <Button
-            onClick={handleSync}
-            disabled={isSyncing}
-            size="sm"
-            variant="primary"
-          >
-            {isSyncing ? (
-              <>
-                <AiOutlineLoading className="w-4 h-4 mr-1.5 animate-spin" />
-                Sincronizando...
-              </>
-            ) : (
-              <>
-                <HiRefresh className="w-4 h-4 mr-1.5" />
-                Sincronizar
-              </>
-            )}
-          </Button>
+          <SyncButton />
         </div>
       </section>
 
-      <section className="bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
-        <h2 className="text-base font-semibold text-slate-100 mb-1">Bio</h2>
-        <p className="text-xs text-slate-500 mb-4">Máximo 240 caracteres</p>
+      <form action={formAction} className="space-y-6">
+        <section className="bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
+          <h2 className="text-base font-semibold text-slate-100 mb-1">Bio</h2>
+          <p className="text-xs text-slate-500 mb-4">Máximo 240 caracteres</p>
 
-        <div className="space-y-2">
-          <Textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value.slice(0, charLimit))}
-            placeholder="Desenvolvedor full-stack apaixonado por open source..."
-            className="min-h-[100px] bg-slate-800/40 border-slate-700 focus:border-blue-500 text-slate-100 resize-none text-sm"
-            maxLength={charLimit}
-          />
-
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-600">Aparece em /u/{username}</span>
-            <span
-              className={
-                charCount > charLimit * 0.9
-                  ? "text-orange-400"
-                  : "text-slate-600"
-              }
-            >
-              {charCount}/{charLimit}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
-        <h2 className="text-base font-semibold text-slate-100 mb-1">
-          Redes Sociais
-        </h2>
-        <p className="text-xs text-slate-500 mb-4">
-          Adicione seus perfis (opcional)
-        </p>
-
-        <div className="space-y-3">
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 text-xs text-slate-400">
-              <FaTwitter className="w-3.5 h-3.5" />
-              Twitter/X
-            </label>
-            <input
-              type="url"
-              value={twitterUrl}
-              onChange={(e) => setTwitterUrl(e.target.value)}
-              placeholder="https://twitter.com/seu_usuario"
-              className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+          <div className="space-y-2">
+            <Textarea
+              name="bio"
+              defaultValue={initialConfig.bio || ""}
+              placeholder="Desenvolvedor full-stack apaixonado por open source..."
+              className="min-h-[100px] bg-slate-800/40 border-slate-700 focus:border-blue-500 text-slate-100 resize-none text-sm"
+              maxLength={240}
             />
+
+            <div className="flex justify-between text-xs">
+              <span className="text-slate-600">Aparece em /u/{username}</span>
+            </div>
           </div>
+        </section>
 
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 text-xs text-slate-400">
-              <FaLinkedin className="w-3.5 h-3.5" />
-              LinkedIn
-            </label>
-            <input
-              type="url"
-              value={linkedinUrl}
-              onChange={(e) => setLinkedinUrl(e.target.value)}
-              placeholder="https://linkedin.com/in/seu_usuario"
-              className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-            />
+        <section className="bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
+          <h2 className="text-base font-semibold text-slate-100 mb-1">
+            Redes Sociais
+          </h2>
+          <p className="text-xs text-slate-500 mb-4">
+            Adicione seus perfis (opcional)
+          </p>
+
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-1.5 text-xs text-slate-400">
+                <FaTwitter className="w-3.5 h-3.5" />
+                Twitter/X
+              </label>
+              <input
+                type="url"
+                name="twitterUrl"
+                defaultValue={initialConfig.twitterUrl || ""}
+                placeholder="https://twitter.com/seu_usuario"
+                className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-1.5 text-xs text-slate-400">
+                <FaLinkedin className="w-3.5 h-3.5" />
+                LinkedIn
+              </label>
+              <input
+                type="url"
+                name="linkedinUrl"
+                defaultValue={initialConfig.linkedinUrl || ""}
+                placeholder="https://linkedin.com/in/seu_usuario"
+                className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-1.5 text-xs text-slate-400">
+                <FaInstagram className="w-3.5 h-3.5" />
+                Instagram
+              </label>
+              <input
+                type="url"
+                name="instagramUrl"
+                defaultValue={initialConfig.instagramUrl || ""}
+                placeholder="https://instagram.com/seu_usuario"
+                className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+              />
+            </div>
           </div>
+        </section>
 
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 text-xs text-slate-400">
-              <FaInstagram className="w-3.5 h-3.5" />
-              Instagram
-            </label>
-            <input
-              type="url"
-              value={instagramUrl}
-              onChange={(e) => setInstagramUrl(e.target.value)}
-              placeholder="https://instagram.com/seu_usuario"
-              className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-            />
-          </div>
-        </div>
-      </section>
+        <section className="bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-semibold text-slate-100 mb-1">
+                Repositórios
+              </h2>
+              <p className="text-xs text-slate-500">
+                Selecione os repositórios que você deseja exibir no portfólio
+              </p>
+            </div>
 
-      <section className="bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
-        <h2 className="text-base font-semibold text-slate-100 mb-1">
-          Repositórios
-        </h2>
-        <p className="text-xs text-slate-500 mb-6">
-          Selecione os repositórios que você deseja exibir no portfólio
-        </p>
-
-        {projects.length > 0 ? (
-          <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-            {projects.map((project) => {
-              const isSelected = isRepoSelected(project.name);
-              const currentPreviewUrl =
-                customPreviewUrls[project.name] || project.previewUrl || "";
-
-              return (
-                <div
-                  key={project.fullName}
-                  className="p-4 bg-slate-800/20 rounded-lg hover:bg-slate-800/30 transition-colors space-y-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <Switch
-                      checked={isSelected}
-                      onCheckedChange={() => toggleRepo(project.name)}
-                      className="data-[state=checked]:bg-blue-600 flex-shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm text-slate-200 font-medium truncate">
-                        {project.name}
-                      </h3>
-                      {project.language && (
-                        <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-blue-400/50" />
-                          {project.language}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="pl-8 space-y-2">
-                    <label className="flex items-center gap-1.5 text-xs text-slate-500">
-                      <HiEye className="w-3 h-3" />
-                      Preview
-                      {project.previewUrl &&
-                        !customPreviewUrls[project.name] && (
-                          <span className="text-xs text-blue-400">(auto)</span>
-                        )}
-                    </label>
-                    <input
-                      type="url"
-                      value={currentPreviewUrl}
-                      onChange={(e) => {
-                        setCustomPreviewUrls({
-                          ...customPreviewUrls,
-                          [project.name]: e.target.value,
-                        });
-                      }}
-                      placeholder="https://meu-projeto.vercel.app"
-                      className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    />
-                    {currentPreviewUrl && (
-                      <div className="flex items-center gap-2">
-                        <a
-                          href={currentPreviewUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
-                        >
-                          <HiExternalLink className="w-3 h-3" />
-                          Testar link
-                        </a>
-                        {currentPreviewUrl !== (project.previewUrl || "") && (
-                          <button
-                            onClick={() => {
-                              const newUrls = { ...customPreviewUrls };
-                              delete newUrls[project.name];
-                              setCustomPreviewUrls(newUrls);
-                            }}
-                            className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
-                          >
-                            Restaurar auto-detectada
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
+            {displayableProjects.length > 0 && (
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Buscar repositórios..."
+                    className="w-full pl-10 pr-3 py-2 text-sm bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  />
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-slate-800/10 rounded-lg">
-            <p className="text-xs text-slate-600">
-              Nenhum projeto. Sincronize seus dados!
-            </p>
-          </div>
-        )}
-
-        {selectedRepos.length > 0 && (
-          <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-            <p className="text-xs text-blue-300">
-              {selectedRepos.length}{" "}
-              {selectedRepos.length === 1
-                ? "repositório selecionado"
-                : "repositórios selecionados"}
-            </p>
-          </div>
-        )}
-      </section>
-
-      <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
-        <div className="flex gap-3">
-          <Button
-            onClick={handleSave}
-            disabled={isSaving}
-            variant="primary"
-            size="sm"
-          >
-            {isSaving ? (
-              <>
-                <AiOutlineLoading className="w-4 h-4 mr-1.5 animate-spin" />
-                Salvando...
-              </>
-            ) : (
-              <>
-                <HiCheck className="w-4 h-4 mr-1.5" />
-                Salvar
-              </>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={handleSelectAll}
+                    variant="outline"
+                    size="sm"
+                    className="whitespace-nowrap"
+                  >
+                    Marcar {searchQuery ? "filtrados" : "todos"}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleDeselectAll}
+                    variant="outline"
+                    size="sm"
+                    className="whitespace-nowrap"
+                  >
+                    Desmarcar todos
+                  </Button>
+                </div>
+              </div>
             )}
-          </Button>
+          </div>
 
-          <Button
-            onClick={() => router.push(`/u/${username}`)}
-            variant="outline"
-            size="sm"
-          >
-            Ver perfil
-          </Button>
+          {displayableProjects.length > 0 ? (
+            <>
+              <div className="mt-4 space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                {filteredProjects.length > 0 ? (
+                  filteredProjects.map((project) => {
+                    const isSelected = selectedRepos.has(project.name);
+                    const currentPreviewUrl =
+                      customPreviewUrls[project.name] ||
+                      project.previewUrl ||
+                      "";
+
+                    return (
+                      <div
+                        key={project.fullName}
+                        className="p-4 bg-slate-800/20 rounded-lg hover:bg-slate-800/30 transition-colors space-y-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleRepo(project.name)}
+                            className="w-5 h-5 rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 cursor-pointer"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm text-slate-200 font-medium truncate">
+                              {project.name}
+                            </h3>
+                            {project.language && (
+                              <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-0.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400/50" />
+                                {project.language}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="pl-8 space-y-2">
+                          <label className="flex items-center gap-1.5 text-xs text-slate-500">
+                            <HiEye className="w-3 h-3" />
+                            Preview
+                            {project.previewUrl &&
+                              !customPreviewUrls[project.name] && (
+                                <span className="text-xs text-blue-400">
+                                  (auto)
+                                </span>
+                              )}
+                          </label>
+                          <input
+                            type="url"
+                            value={currentPreviewUrl}
+                            onChange={(e) => {
+                              setCustomPreviewUrls({
+                                ...customPreviewUrls,
+                                [project.name]: e.target.value,
+                              });
+                            }}
+                            placeholder="https://meu-projeto.vercel.app"
+                            className="w-full px-3 py-1.5 text-xs bg-slate-900/40 border border-slate-700/50 rounded-md text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                          />
+                          {currentPreviewUrl && (
+                            <div className="flex items-center gap-2">
+                              <a
+                                href={currentPreviewUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
+                              >
+                                <HiExternalLink className="w-3 h-3" />
+                                Testar link
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-8 bg-slate-800/10 rounded-lg">
+                    <p className="text-xs text-slate-600">
+                      Nenhum repositório encontrado para &quot;{searchQuery}
+                      &quot;
+                    </p>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12 bg-slate-800/10 rounded-lg mt-4">
+              <p className="text-xs text-slate-600">
+                Nenhum projeto. Sincronize seus dados!
+              </p>
+            </div>
+          )}
+
+          {selectedRepos.size > 0 && (
+            <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+              <p className="text-xs text-blue-300">
+                {selectedRepos.size} de {displayableProjects.length}{" "}
+                {selectedRepos.size === 1
+                  ? "repositório selecionado"
+                  : "repositórios selecionados"}
+              </p>
+            </div>
+          )}
+        </section>
+
+        {Array.from(selectedRepos).map((repoName) => (
+          <input
+            key={repoName}
+            type="hidden"
+            name="includeRepos"
+            value={repoName}
+          />
+        ))}
+
+        <input
+          type="hidden"
+          name="customPreviewUrls"
+          value={JSON.stringify(customPreviewUrls)}
+        />
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-slate-900/30 backdrop-blur-sm border border-slate-800 rounded-xl p-6">
+          <div className="flex gap-3">
+            <SubmitButton />
+
+            <Button
+              type="button"
+              onClick={() => router.push(`/u/${username}`)}
+              variant="outline"
+              size="sm"
+            >
+              Ver perfil
+            </Button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
