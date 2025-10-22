@@ -14,12 +14,20 @@ export default async function Home() {
 
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
         <header className="pt-6 pb-12 flex justify-between items-center animate-in fade-in duration-500 ease-out">
-          <Link
-            href="/"
-            className="text-slate-400 hover:text-slate-100 transition-colors text-sm font-medium"
-          >
-            git-to-know-me
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link
+              href="/"
+              className="text-slate-400 hover:text-slate-100 transition-colors text-sm font-medium"
+            >
+              git-to-know-me
+            </Link>
+            <Link
+              href="/como-usar"
+              className="text-slate-500 hover:text-slate-300 transition-colors text-sm"
+            >
+              Como usar
+            </Link>
+          </div>
 
           <div className="flex items-center gap-2">
             {session?.user && (
@@ -132,6 +140,18 @@ export default async function Home() {
                   Link único para mostrar em currículos e LinkedIn
                 </p>
               </div>
+            </div>
+
+            <div className="pt-4">
+              <Link
+                href="/como-usar"
+                className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors group"
+              >
+                <span>Veja como funciona</span>
+                <span className="group-hover:translate-x-0.5 transition-transform">
+                  →
+                </span>
+              </Link>
             </div>
           </div>
 
