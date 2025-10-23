@@ -30,7 +30,7 @@ export default async function Image({ params }: ImageProps) {
             backgroundColor: "#0f172a",
           }}
         >
-          <div style={{ fontSize: 48, color: "#64748b" }}>
+          <div style={{ display: "flex", fontSize: 48, color: "#64748b" }}>
             Post não encontrado
           </div>
         </div>
@@ -64,6 +64,7 @@ export default async function Image({ params }: ImageProps) {
         >
           <div
             style={{
+              display: "flex",
               fontSize: 64,
               fontWeight: "bold",
               color: "#f1f5f9",
@@ -77,6 +78,7 @@ export default async function Image({ params }: ImageProps) {
           {post.summary && (
             <div
               style={{
+                display: "flex",
                 fontSize: 28,
                 color: "#94a3b8",
                 lineHeight: 1.4,
@@ -94,6 +96,7 @@ export default async function Image({ params }: ImageProps) {
                 <div
                   key={tag}
                   style={{
+                    display: "flex",
                     fontSize: 20,
                     color: "#a78bfa",
                     backgroundColor: "rgba(139, 92, 246, 0.1)",
@@ -120,6 +123,7 @@ export default async function Image({ params }: ImageProps) {
         >
           <div
             style={{
+              display: "flex",
               fontSize: 32,
               color: "#64748b",
               fontWeight: "500",
@@ -130,9 +134,9 @@ export default async function Image({ params }: ImageProps) {
 
           <div
             style={{
+              display: "flex",
               fontSize: 28,
               color: "#475569",
-              display: "flex",
               alignItems: "center",
               gap: 12,
             }}
