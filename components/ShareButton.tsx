@@ -11,10 +11,8 @@ interface ShareButtonProps {
 }
 
 export function ShareButton({ url, title, summary }: ShareButtonProps) {
-  const linkedInUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+  const linkedInUrl = `https://www.linkedin.com/feed/?shareActive=true&shareUrl=${encodeURIComponent(
     url
-  )}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(
-    summary || ""
   )}`;
 
   const twitterText = `${title}${
