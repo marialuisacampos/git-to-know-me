@@ -102,6 +102,10 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {publishedDate}
               </time>
 
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-100 leading-tight">
+                {post.title}
+              </h1>
+
               {post.summary && (
                 <p className="text-sm text-slate-400 leading-relaxed">
                   {post.summary}
