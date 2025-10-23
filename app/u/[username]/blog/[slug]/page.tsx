@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import { NavUser } from "@/components/NavUser";
 import { ClaimProfile } from "@/components/ClaimProfile";
+import { ShareButton } from "@/components/ShareButton";
 import { getUserPost } from "@/lib/db/posts";
 import { isUserRegistered } from "@/lib/db/users";
 import { getGitHubUser } from "@/lib/github";
@@ -10,6 +12,42 @@ interface PageProps {
   params: {
     username: string;
     slug: string;
+  };
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { username, slug } = await params;
+
+  const post = await getUserPost(username, slug);
+
+  if (!post) {
+    return {
+      title: "Post não encontrado",
+    };
+  }
+
+  const postUrl = `https://gittoknowme.com.br/u/${username}/blog/${slug}`;
+
+  return {
+    title: `${post.title} | @${username}`,
+    description: post.summary || `Post por @${username}`,
+    openGraph: {
+      title: post.title,
+      description: post.summary || `Post por @${username}`,
+      url: postUrl,
+      siteName: "Git to know me",
+      type: "article",
+      publishedTime: post.publishedAt,
+      authors: [username],
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary,
+    },
   };
 }
 
@@ -37,6 +75,8 @@ export default async function BlogPostPage({ params }: PageProps) {
     month: "long",
     day: "numeric",
   });
+
+  const postUrl = `https://gittoknowme.com.br/u/${username}/blog/${slug}`;
 
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -83,6 +123,24 @@ export default async function BlogPostPage({ params }: PageProps) {
             </header>
 
             <MarkdownPreview source={post.contentMdx} />
+
+            <footer className="mt-12 pt-8 border-t border-slate-800/50 space-y-4">
+              <div>
+                <p className="text-sm text-slate-400 mb-3">
+                  Gostou do post? Compartilhe:
+                </p>
+                <ShareButton
+                  url={postUrl}
+                  title={post.title}
+                  summary={post.summary}
+                />
+              </div>
+
+              <p className="text-xs text-slate-600">
+                🌐 Criado com git-to-know-me - transforme seus repos do GitHub
+                em portfólio
+              </p>
+            </footer>
           </div>
         </article>
       </div>
