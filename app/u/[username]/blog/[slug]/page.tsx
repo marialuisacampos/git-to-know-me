@@ -137,8 +137,8 @@ export default async function BlogPostPage({ params }: PageProps) {
               </div>
 
               <p className="text-xs text-slate-600">
-                🌐 Criado com git-to-know-me - transforme seus repos do GitHub
-                em portfólio
+                Criado com git-to-know-me - transforme seus repos do GitHub em
+                portfólio
               </p>
             </footer>
           </div>
