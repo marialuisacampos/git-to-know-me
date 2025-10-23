@@ -2,7 +2,7 @@
 
 <img width="2048" height="1077" alt="image" src="https://github.com/user-attachments/assets/d751ab21-94fa-4133-9ec8-f13e90163af6" />
 
-A modern portfolio platform that transforms your GitHub repositories into a beautiful, personalized website. - www.gittoknowme.com.br
+A modern portfolio platform that transforms your GitHub repositories into a beautiful, personalized website. - www.gittoknowme.com
 
 ## About
 
