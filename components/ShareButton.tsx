@@ -11,7 +11,7 @@ interface ShareButtonProps {
 }
 
 export function ShareButton({ url, title, summary }: ShareButtonProps) {
-  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+  const linkedInUrl = `https://www.linkedin.com/feed/?&shareActive=true&shareUrl=${encodeURIComponent(
     url
   )}`;
 

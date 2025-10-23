@@ -28,7 +28,7 @@ export async function generateMetadata({
     };
   }
 
-  const postUrl = `https://gittoknowme.com.br/u/${username}/blog/${slug}`;
+  const postUrl = `https://gittoknowme.com/u/${username}/blog/${slug}`;
 
   return {
     title: `${post.title} | @${username}`,
@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     day: "numeric",
   });
 
-  const postUrl = `https://gittoknowme.com.br/u/${username}/blog/${slug}`;
+  const postUrl = `https://gittoknowme.com/u/${username}/blog/${slug}`;
 
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
