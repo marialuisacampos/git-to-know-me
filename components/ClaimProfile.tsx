@@ -2,6 +2,7 @@ import Link from "next/link";
 import { HiUser } from "react-icons/hi";
 import { FaGithub } from "react-icons/fa";
 import { Button } from "@/components/base-ui/Button";
+import { Logo } from "@/components/Logo";
 
 interface ClaimProfileProps {
   username: string;
@@ -11,6 +12,9 @@ export function ClaimProfile({ username }: ClaimProfileProps) {
   return (
     <main className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
       <div className="max-w-lg text-center space-y-6">
+        <div className="flex justify-center mb-4">
+          <Logo size="xl" showText={false} />
+        </div>
         <div className="flex justify-center">
           <HiUser className="w-20 h-20 text-slate-800" />
         </div>

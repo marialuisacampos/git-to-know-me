@@ -40,7 +40,7 @@ export default async function UserPage({ params }: PageProps) {
 
   const displayName = githubUser.name || githubUser.login;
   const bio = userConfig.bio || githubUser.bio;
-  const portfolioUrl = `https://git-to-know-me.vercel.app/u/${username}`;
+  const portfolioUrl = `https://www.gittoknowme.com/u/${username}`;
   const hasBlogPosts = posts.length > 0;
 
   return (
@@ -151,7 +151,7 @@ export default async function UserPage({ params }: PageProps) {
               className="inline-flex items-center gap-1.5 text-xs text-slate-700 hover:text-slate-500 transition-colors duration-150"
             >
               <span>Crie seu portfólio com</span>
-              <span className="font-medium">git-to-know-me</span>
+              <span className="font-medium">Git To Know Me</span>
             </Link>
           </div>
         </div>

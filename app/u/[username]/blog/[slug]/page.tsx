@@ -28,7 +28,7 @@ export async function generateMetadata({
     };
   }
 
-  const postUrl = `https://gittoknowme.com/u/${username}/blog/${slug}`;
+  const postUrl = `https://www.gittoknowme.com/u/${username}/blog/${slug}`;
 
   return {
     title: `${post.title} | @${username}`,
@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     day: "numeric",
   });
 
-  const postUrl = `https://gittoknowme.com/u/${username}/blog/${slug}`;
+  const postUrl = `https://www.gittoknowme.com/u/${username}/blog/${slug}`;
 
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -131,7 +131,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             <footer className="mt-12 pt-8 border-t border-slate-800/50 space-y-4">
               <div>
                 <p className="text-sm text-slate-400 mb-3">
-                  Gostou do post? Compartilhe:
+                  Compartilhe este post:
                 </p>
                 <ShareButton
                   url={postUrl}
@@ -139,11 +139,6 @@ export default async function BlogPostPage({ params }: PageProps) {
                   summary={post.summary}
                 />
               </div>
-
-              <p className="text-xs text-slate-600">
-                Criado com git-to-know-me - transforme seus repos do GitHub em
-                portfólio
-              </p>
             </footer>
           </div>
         </article>
