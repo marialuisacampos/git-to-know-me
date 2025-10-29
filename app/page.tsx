@@ -1,5 +1,6 @@
 import { getServerSession } from "@/lib/auth";
 import { AuthButton } from "@/components/AuthButton";
+import { Logo } from "@/components/Logo";
 import Link from "next/link";
 import { Button } from "@/components/base-ui/Button";
 import Image from "next/image";
@@ -15,14 +16,9 @@ export default async function Home() {
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
         <header className="pt-6 pb-12 flex justify-between items-center animate-in fade-in duration-500 ease-out">
           <div className="flex items-center gap-6">
+            <Logo href="/" size="md" />
             <Link
-              href="/"
-              className="text-slate-400 hover:text-slate-100 transition-colors text-sm font-medium"
-            >
-              git-to-know-me
-            </Link>
-            <Link
-              href="/como-usar"
+              href="/getting-started"
               className="text-slate-500 hover:text-slate-300 transition-colors text-sm"
             >
               Como usar
@@ -144,7 +140,7 @@ export default async function Home() {
 
             <div className="pt-4">
               <Link
-                href="/como-usar"
+                href="/getting-started"
                 className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors group"
               >
                 <span>Veja como funciona</span>
@@ -155,9 +151,14 @@ export default async function Home() {
             </div>
           </div>
 
-          <p className="text-slate-600 text-xs pt-16 animate-in fade-in delay-300 motion-reduce:animate-none">
-            Desenvolvido por @marialuisacampos
-          </p>
+          <div className="pt-16 space-y-4 animate-in fade-in delay-300 motion-reduce:animate-none">
+            <div className="flex justify-center">
+              <Logo size="sm" />
+            </div>
+            <p className="text-slate-600 text-xs text-center">
+              Desenvolvido por @marialuisacampos
+            </p>
+          </div>
         </div>
       </div>
     </main>
