@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Git to know me",
+  icons: {
+    icon: "/favicon.svg",
+  },
   description: "Show your code. Tell your story.",
 };
 

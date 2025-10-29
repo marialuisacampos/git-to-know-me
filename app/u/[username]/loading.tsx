@@ -5,13 +5,20 @@ import {
   SkeletonText,
   SkeletonButton,
 } from "@/components/skeleton/SkeletonBase";
+import { Logo } from "@/components/Logo";
 
 export default function Loading() {
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       <SkeletonBackground />
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-6">
+      <div className="relative z-20 flex justify-center items-center p-6">
+        <div className="animate-in fade-in slide-in-from-top-4 duration-700">
+          <Logo size="sm" />
+        </div>
+      </div>
+
+      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-120px)] px-6">
         <div className="w-full max-w-3xl">
           <SkeletonCard className="p-8 md:p-10 rounded-2xl animate-pulse">
             <div className="space-y-6">
