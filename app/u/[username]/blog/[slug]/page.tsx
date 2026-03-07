@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { NavUser } from "@/components/NavUser";
 import { ClaimProfile } from "@/components/ClaimProfile";
 import { ShareButton } from "@/components/ShareButton";
+import { LikeButton } from "@/components/LikeButton";
 import { getUserPost } from "@/lib/db/posts";
 import { isUserRegistered } from "@/lib/db/users";
 import { getGitHubUser } from "@/lib/github";
@@ -129,15 +130,22 @@ export default async function BlogPostPage({ params }: PageProps) {
             <MarkdownPreview source={post.contentMdx} />
 
             <footer className="mt-12 pt-8 border-t border-slate-800/50 space-y-4">
-              <div>
-                <p className="text-sm text-slate-400 mb-3">
-                  Compartilhe este post:
-                </p>
-                <ShareButton
-                  url={postUrl}
-                  title={post.title}
-                  summary={post.summary}
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <LikeButton
+                  username={username}
+                  slug={slug}
+                  initialLikesCount={post.likesCount ?? 0}
                 />
+                <div>
+                  <p className="text-sm text-slate-400 mb-2">
+                    Compartilhe este post:
+                  </p>
+                  <ShareButton
+                    url={postUrl}
+                    title={post.title}
+                    summary={post.summary}
+                  />
+                </div>
               </div>
             </footer>
           </div>

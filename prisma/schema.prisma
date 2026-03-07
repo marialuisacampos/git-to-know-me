@@ -97,8 +97,10 @@ model BlogPost {
   contentMdx  String   @db.Text // Max 20KB
   tags        Json? // string[]
   publishedAt DateTime
+  likesCount  Int      @default(0)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes BlogPostLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,4 +109,17 @@ model BlogPost {
   @@index([userId])
   @@index([slug])
   @@index([publishedAt])
+}
+
+model BlogPostLike {
+  id          String @id @default(cuid())
+  blogPostId  String
+  fingerprint String
+
+  blogPost BlogPost @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([blogPostId, fingerprint])
+  @@index([blogPostId])
 }

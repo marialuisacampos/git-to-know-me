@@ -56,9 +56,25 @@ export function PostCard({ post, username }: PostCardProps) {
             </div>
           )}
 
-          <div className="flex items-center gap-1.5 pt-1 text-xs text-slate-500 group-hover:text-slate-400 transition-colors duration-300">
-            <span>Ler artigo</span>
-            <HiChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300" />
+          <div className="flex items-center justify-between pt-1">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 group-hover:text-slate-400 transition-colors duration-300">
+              <span>Ler artigo</span>
+              <HiChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300" />
+            </div>
+
+            <div className={`flex items-center gap-1 text-xs ${(post.likesCount ?? 0) > 0 ? "text-pink-400/60" : "text-slate-600"}`}>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill={(post.likesCount ?? 0) > 0 ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth={(post.likesCount ?? 0) > 0 ? "0" : "2"}
+              >
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+              <span className="tabular-nums">{post.likesCount ?? 0}</span>
+            </div>
           </div>
         </div>
       </div>
