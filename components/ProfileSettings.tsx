@@ -122,7 +122,7 @@ export function ProfileSettings({
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-slate-500 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg p-1.5 transition-all duration-150"
+                className="text-slate-500 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg p-1.5 transition-all duration-150 cursor-pointer"
                 aria-label="Fechar"
               >
                 <HiX className="w-4 h-4" />

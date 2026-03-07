@@ -67,7 +67,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
           <button
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-300 transition-colors"
+            className="text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
             aria-label="Fechar"
           >
             <HiX className="w-5 h-5" />

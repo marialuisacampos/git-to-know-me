@@ -16,7 +16,7 @@ export default async function Home() {
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
         <header className="pt-6 pb-12 flex justify-between items-center animate-in fade-in duration-500 ease-out">
           <div className="flex items-center gap-6">
-            <Logo href="/" size="md" />
+            <Logo href="/" size="md" variant="full" />
             <Link
               href="/getting-started"
               className="text-slate-500 hover:text-slate-300 transition-colors text-sm"
@@ -153,7 +153,7 @@ export default async function Home() {
 
           <div className="pt-16 space-y-4 animate-in fade-in delay-300 motion-reduce:animate-none">
             <div className="flex justify-center">
-              <Logo size="sm" />
+              <Logo size="sm" variant="full" />
             </div>
             <p className="text-slate-600 text-xs text-center">
               Desenvolvido por @marialuisacampos
