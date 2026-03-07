@@ -102,7 +102,7 @@ export function PreviewModal({
               </Button>
               <button
                 onClick={() => onOpenChange(false)}
-                className="text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg p-2 transition-all duration-150"
+                className="text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg p-2 transition-all duration-150 cursor-pointer"
                 aria-label="Fechar preview"
               >
                 <HiX className="w-5 h-5" />

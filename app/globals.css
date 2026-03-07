@@ -1,33 +1,85 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #020617;
-  --color-foreground: #f1f5f9;
+  /* Base palette used by Tailwind utilities across the app */
+  --color-white: #ffffff;
+  --color-black: #000000;
 
-  --color-card: #0f172a;
-  --color-card-foreground: #f1f5f9;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
 
-  --color-popover: #0f172a;
-  --color-popover-foreground: #f1f5f9;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
 
-  --color-primary: #f1f5f9;
-  --color-primary-foreground: #0f172a;
+  --color-purple-400: #c084fc;
+  --color-purple-500: #a855f7;
+  --color-cyan-400: #22d3ee;
+  --color-pink-400: #f472b6;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
 
-  --color-secondary: #1e293b;
-  --color-secondary-foreground: #f1f5f9;
+  /* Alpha helpers used in current UI */
+  --color-slate-700-50: rgb(51 65 85 / 0.5);
+  --color-slate-700-60: rgb(51 65 85 / 0.6);
+  --color-slate-700-80: rgb(51 65 85 / 0.8);
+  --color-slate-800-20: rgb(30 41 59 / 0.2);
+  --color-slate-800-30: rgb(30 41 59 / 0.3);
+  --color-slate-800-35: rgb(30 41 59 / 0.35);
+  --color-slate-800-40: rgb(30 41 59 / 0.4);
+  --color-slate-800-50: rgb(30 41 59 / 0.5);
+  --color-slate-900-30: rgb(15 23 42 / 0.3);
+  --color-slate-900-40: rgb(15 23 42 / 0.4);
+  --color-slate-900-45: rgb(15 23 42 / 0.45);
+  --color-slate-900-50: rgb(15 23 42 / 0.5);
+  --color-slate-900-95: rgb(15 23 42 / 0.95);
+  --color-blue-400-50: rgb(96 165 250 / 0.5);
+  --color-blue-500-10: rgb(59 130 246 / 0.1);
+  --color-blue-500-15: rgb(59 130 246 / 0.15);
+  --color-blue-500-20: rgb(59 130 246 / 0.2);
+  --color-blue-500-30: rgb(59 130 246 / 0.3);
+  --color-purple-500-5: rgb(168 85 247 / 0.05);
+  --color-purple-500-10: rgb(168 85 247 / 0.1);
+  --color-purple-500-20: rgb(168 85 247 / 0.2);
+  --color-purple-500-40: rgb(168 85 247 / 0.4);
 
-  --color-muted: #1e293b;
-  --color-muted-foreground: #94a3b8;
+  /* Semantic design tokens (used by base-ui components) */
+  --color-background: var(--color-slate-950);
+  --color-foreground: var(--color-slate-100);
 
-  --color-accent: #1e293b;
-  --color-accent-foreground: #f1f5f9;
+  --color-card: var(--color-slate-900);
+  --color-card-foreground: var(--color-slate-100);
 
-  --color-destructive: #7f1d1d;
-  --color-destructive-foreground: #f1f5f9;
+  --color-popover: var(--color-slate-900);
+  --color-popover-foreground: var(--color-slate-100);
 
-  --color-border: #1e293b;
-  --color-input: #1e293b;
-  --color-ring: #cbd5e1;
+  --color-primary: var(--color-slate-100);
+  --color-primary-foreground: var(--color-slate-900);
+
+  --color-secondary: var(--color-slate-800);
+  --color-secondary-foreground: var(--color-slate-100);
+
+  --color-muted: var(--color-slate-800);
+  --color-muted-foreground: var(--color-slate-400);
+
+  --color-accent: var(--color-slate-800);
+  --color-accent-foreground: var(--color-slate-100);
+
+  --color-destructive: var(--color-red-700);
+  --color-destructive-foreground: var(--color-slate-100);
+
+  --color-border: var(--color-slate-800);
+  --color-input: var(--color-slate-800);
+  --color-ring: var(--color-slate-300);
 
   --radius: 0.5rem;
 }
@@ -218,5 +270,5 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(51 65 85 / 0.8) rgb(15 23 42 / 0.5);
+  scrollbar-color: var(--color-slate-700-80) var(--color-slate-900-50);
 }

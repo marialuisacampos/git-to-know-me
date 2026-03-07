@@ -13,7 +13,7 @@ export function ClaimProfile({ username }: ClaimProfileProps) {
     <main className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
       <div className="max-w-lg text-center space-y-6">
         <div className="flex justify-center mb-4">
-          <Logo size="xl" showText={false} />
+          <Logo size="xl" />
         </div>
         <div className="flex justify-center">
           <HiUser className="w-20 h-20 text-slate-800" />

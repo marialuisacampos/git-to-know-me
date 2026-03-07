@@ -79,7 +79,7 @@ export default async function UserPage({ params }: PageProps) {
 
               <div className="flex flex-wrap gap-3 pt-4">
                 <Link href={`/u/${username}/projects`}>
-                  <button className="group inline-flex items-center gap-2 h-9 px-4 bg-blue-600/90 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors duration-300">
+                  <button className="group inline-flex items-center gap-2 h-9 px-4 bg-blue-600/90 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors duration-300 cursor-pointer">
                     <HiFolder className="w-4 h-4" />
                     Projetos
                   </button>
@@ -87,7 +87,7 @@ export default async function UserPage({ params }: PageProps) {
 
                 {hasBlogPosts && (
                   <Link href={`/u/${username}/blog`}>
-                    <button className="group inline-flex items-center gap-2 h-9 px-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-600 text-slate-300 hover:text-slate-100 text-sm rounded-lg transition-all duration-300">
+                    <button className="group inline-flex items-center gap-2 h-9 px-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-600 text-slate-300 hover:text-slate-100 text-sm rounded-lg transition-all duration-300 cursor-pointer">
                       <HiBookOpen className="w-4 h-4" />
                       Blog
                     </button>
@@ -151,7 +151,7 @@ export default async function UserPage({ params }: PageProps) {
               className="inline-flex items-center gap-1.5 text-xs text-slate-700 hover:text-slate-500 transition-colors duration-150"
             >
               <span>Crie seu portfólio com</span>
-              <span className="font-medium">Git To Know Me</span>
+              <span className="font-mono font-bold">GTNM</span>
             </Link>
           </div>
         </div>

@@ -37,7 +37,7 @@ export async function generateMetadata({
       title: post.title,
       description: post.summary || `Post por @${username}`,
       url: postUrl,
-      siteName: "Git to know me",
+      siteName: "GTNM",
       type: "article",
       publishedTime: post.publishedAt,
       authors: [username],
