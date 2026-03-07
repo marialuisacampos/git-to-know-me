@@ -1,0 +1,18 @@
+---
+description: Fluxo seguro de migrations Prisma sem drift ou perda de dados
+globs: "{prisma,lib/db}/**/*.{ts,prisma,sql}"
+alwaysApply: false
+---
+
+# Prisma Migration Safety
+
+Seguir `docs/operations/migrations-prisma.md`.
+
+- Fluxo: `schema.prisma` → `migrate dev --name x` → `generate` → `validate` → `migrate status`.
+- Commitar `schema.prisma` + pasta `prisma/migrations/<timestamp>_*/` juntos.
+- Producao/CI: so `migrate deploy`, nunca `migrate dev`.
+- Nunca apagar/renomear migrations aplicadas.
+- Nunca editar SQL de migration ja aplicada; criar nova.
+- Evitar `db push` em banco compartilhado.
+- SQL manual em emergencia → criar migration formal equivalente no repo depois.
+- Nunca `migrate reset` em banco remoto.
