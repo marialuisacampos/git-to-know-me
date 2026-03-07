@@ -14,18 +14,18 @@ export default async function Home() {
       <BackgroundAnimation />
 
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col min-h-screen">
-        <header className="py-6 flex justify-between items-center animate-in fade-in duration-500 ease-out">
-          <div className="flex items-center gap-6">
+        <header className="py-6 flex justify-between items-center gap-4 animate-in fade-in duration-500 ease-out">
+          <div className="flex items-center gap-3 sm:gap-6 min-w-0">
             <Logo href="/" size="md" variant="full" />
             <Link
               href="/getting-started"
-              className="text-slate-500 hover:text-slate-300 transition-colors text-sm"
+              className="hidden sm:inline text-slate-500 hover:text-slate-300 transition-colors text-sm whitespace-nowrap"
             >
               Como usar
             </Link>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {session?.user && (
               <Link href="/dashboard">
                 <Button variant="ghost" size="sm">
