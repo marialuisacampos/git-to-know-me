@@ -14,6 +14,7 @@ export async function getUserPosts(username: string): Promise<PostMeta[]> {
             contentMdx: true,
             tags: true,
             publishedAt: true,
+            likesCount: true,
           },
           orderBy: {
             publishedAt: "desc",
@@ -34,6 +35,7 @@ export async function getUserPosts(username: string): Promise<PostMeta[]> {
         contentMdx: string;
         tags: unknown;
         publishedAt: Date;
+        likesCount: number;
       }): PostMeta => ({
         slug: post.slug,
         title: post.title,
@@ -41,6 +43,7 @@ export async function getUserPosts(username: string): Promise<PostMeta[]> {
         contentMdx: post.contentMdx,
         tags: post.tags ? (post.tags as string[]) : undefined,
         publishedAt: post.publishedAt.toISOString(),
+        likesCount: post.likesCount,
       })
     );
   } catch {
@@ -65,6 +68,7 @@ export async function getUserPost(
         contentMdx: true,
         tags: true,
         publishedAt: true,
+        likesCount: true,
       },
     });
 
@@ -79,6 +83,7 @@ export async function getUserPost(
       contentMdx: post.contentMdx,
       tags: post.tags ? (post.tags as string[]) : undefined,
       publishedAt: post.publishedAt.toISOString(),
+      likesCount: post.likesCount,
     };
   } catch {
     return null;

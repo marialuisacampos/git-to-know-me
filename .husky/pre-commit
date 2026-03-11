@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Arquivos staged neste commit
+STAGED=$(git diff --cached --name-only)
+
+SCHEMA_CHANGED=$(echo "$STAGED" | grep -c "prisma/schema.prisma" || echo "0")
+MIGRATION_ADDED=$(echo "$STAGED" | grep -c "prisma/migrations/.*/migration.sql" || echo "0")
+
+if [ "$SCHEMA_CHANGED" -gt 0 ] && [ "$MIGRATION_ADDED" -eq 0 ]; then
+  echo ""
+  echo "prisma/schema.prisma foi alterado mas nenhuma migration esta no commit."
+  echo ""
+  echo "   Rode:  npx prisma migrate dev --name <nome-curto>"
+  echo "   Depois: git add prisma/migrations/"
+  echo ""
+  echo "   Se a mudanca e so comentario/formatacao, use: git commit --no-verify"
+  echo ""
+  exit 1
+fi

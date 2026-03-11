@@ -28,4 +28,5 @@ export type PostMeta = {
   contentMdx: string;
   tags?: string[];
   publishedAt: string;
+  likesCount?: number;
 };

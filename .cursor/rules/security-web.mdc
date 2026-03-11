@@ -1,0 +1,16 @@
+---
+description: Regras de seguranca para Next.js + Vercel + Neon
+globs: "{app,components,lib}/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Security Web
+
+Seguir `docs/standards/security-web.md`.
+
+- Nunca expor segredos no client (nao prefixar com `NEXT_PUBLIC_`).
+- Validar todo input externo com Zod antes de persistir.
+- Sanitizar markdown com rehype-sanitize; nunca `dangerouslySetInnerHTML` sem sanitizacao.
+- Usar Prisma parametrizado; nunca `$queryRawUnsafe` com input do usuario.
+- Erros ao client: mensagem generica; log detalhado no server.
+- Rotas de escrita: proteger com `getServerSession(authOptions)`.

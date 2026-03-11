@@ -140,7 +140,7 @@ export async function listBlogPostFiles(username: string): Promise<string[]> {
     if ((error as { status?: number }).status === 404) {
       return [];
     }
-    return [];
+    throw error;
   }
 }
 
@@ -187,7 +187,7 @@ export async function getBlogPostContent(
     if ((error as { status?: number }).status === 404) {
       return null;
     }
-    return null;
+    throw error;
   }
 }
 

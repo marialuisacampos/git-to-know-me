@@ -3,10 +3,14 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 interface NavUserProps {
   username: string;
-  currentPage?: "profile" | "projects" | "blog";
+  currentPage?: "profile" | "projects" | "blog" | "blog-post";
+  backHref?: string;
 }
 
-export function NavUser({ username, currentPage }: NavUserProps) {
+export function NavUser({ username, currentPage, backHref }: NavUserProps) {
+  const defaultBackHref = `/u/${username}`;
+  const resolvedBackHref = backHref ?? defaultBackHref;
+
   return (
     <nav
       className="mb-8 flex items-center justify-between gap-3 text-sm"
@@ -15,7 +19,7 @@ export function NavUser({ username, currentPage }: NavUserProps) {
       <div className="flex items-center gap-3">
         {currentPage && currentPage !== "profile" && (
           <Link
-            href={`/u/${username}`}
+            href={resolvedBackHref}
             className="inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition-colors group"
           >
             <HiChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform motion-reduce:transition-none" />
@@ -38,10 +42,19 @@ export function NavUser({ username, currentPage }: NavUserProps) {
             </>
           )}
 
-          {currentPage === "blog" && (
+          {(currentPage === "blog" || currentPage === "blog-post") && (
             <>
               <span>/</span>
-              <span className="text-slate-300">blog</span>
+              {currentPage === "blog-post" ? (
+                <Link
+                  href={`/u/${username}/blog`}
+                  className="hover:text-slate-300 transition-colors"
+                >
+                  blog
+                </Link>
+              ) : (
+                <span className="text-slate-300">blog</span>
+              )}
             </>
           )}
         </div>
