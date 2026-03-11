@@ -73,10 +73,21 @@ CREATE TABLE "BlogPost" (
     "contentMdx" TEXT NOT NULL,
     "tags" JSONB,
     "publishedAt" TIMESTAMP(3) NOT NULL,
+    "likesCount" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "BlogPost_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BlogPostLike" (
+    "id" TEXT NOT NULL,
+    "blogPostId" TEXT NOT NULL,
+    "fingerprint" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "BlogPostLike_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -124,6 +135,12 @@ CREATE INDEX "BlogPost_publishedAt_idx" ON "BlogPost"("publishedAt");
 -- CreateIndex
 CREATE UNIQUE INDEX "BlogPost_userId_slug_key" ON "BlogPost"("userId", "slug");
 
+-- CreateIndex
+CREATE INDEX "BlogPostLike_blogPostId_idx" ON "BlogPostLike"("blogPostId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BlogPostLike_blogPostId_fingerprint_key" ON "BlogPostLike"("blogPostId", "fingerprint");
+
 -- AddForeignKey
 ALTER TABLE "Consent" ADD CONSTRAINT "Consent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -135,4 +152,7 @@ ALTER TABLE "Project" ADD CONSTRAINT "Project_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "BlogPost" ADD CONSTRAINT "BlogPost_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BlogPostLike" ADD CONSTRAINT "BlogPostLike_blogPostId_fkey" FOREIGN KEY ("blogPostId") REFERENCES "BlogPost"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 

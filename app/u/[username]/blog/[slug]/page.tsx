@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { NavUser } from "@/components/NavUser";
 import { ClaimProfile } from "@/components/ClaimProfile";
 import { ShareButton } from "@/components/ShareButton";
-import { LikeButton } from "@/components/LikeButton";
+import { LikeButton, LikeProvider } from "@/components/LikeButton";
 import { getUserPost } from "@/lib/db/posts";
 import { isUserRegistered } from "@/lib/db/users";
 import { getGitHubUser } from "@/lib/github";
@@ -90,65 +90,77 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div className="animate-in fade-in slide-in-from-top-4 duration-700">
-          <NavUser username={username} currentPage="blog" />
+          <NavUser
+            username={username}
+            currentPage="blog-post"
+            backHref={`/u/${username}/blog`}
+          />
         </div>
 
         <article className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-          <div className="relative bg-slate-900/30 backdrop-blur-xl border border-slate-800/50 rounded-xl p-6 md:p-8 shadow-xl">
-            <header className="space-y-3 pb-6 mb-6 border-b border-slate-800/50">
-              <time
-                dateTime={post.publishedAt}
-                className="block text-xs text-slate-500"
-              >
-                {publishedDate}
-              </time>
-
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-100 leading-tight">
-                {post.title}
-              </h1>
-
-              {post.summary && (
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  {post.summary}
-                </p>
-              )}
-
-              {post.tags && post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-purple-500/10 text-purple-400/80 border border-purple-500/20"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </header>
-
-            <MarkdownPreview source={post.contentMdx} />
-
-            <footer className="mt-12 pt-8 border-t border-slate-800/50 space-y-4">
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <LikeButton
-                  username={username}
-                  slug={slug}
-                  initialLikesCount={post.likesCount ?? 0}
-                />
-                <div>
-                  <p className="text-sm text-slate-400 mb-2">
-                    Compartilhe este post:
-                  </p>
-                  <ShareButton
-                    url={postUrl}
-                    title={post.title}
-                    summary={post.summary}
+          <LikeProvider
+            username={username}
+            slug={slug}
+            initialLikesCount={post.likesCount ?? 0}
+          >
+            <div className="relative bg-slate-900/30 backdrop-blur-xl border border-slate-800/50 rounded-xl p-6 md:p-8 shadow-xl">
+              <header className="space-y-3 pb-6 mb-6 border-b border-slate-800/50">
+                <div className="flex items-center justify-between gap-4">
+                  <time
+                    dateTime={post.publishedAt}
+                    className="text-xs text-slate-500"
+                  >
+                    {publishedDate}
+                  </time>
+                  <LikeButton
+                    variant="compact"
+                    initialLikesCount={post.likesCount ?? 0}
                   />
                 </div>
-              </div>
-            </footer>
-          </div>
+
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-100 leading-tight">
+                  {post.title}
+                </h1>
+
+                {post.summary && (
+                  <p className="text-sm text-slate-400 leading-relaxed">
+                    {post.summary}
+                  </p>
+                )}
+
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-purple-500/10 text-purple-400/80 border border-purple-500/20"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </header>
+
+              <MarkdownPreview source={post.contentMdx} />
+
+              <footer className="mt-12 pt-8 border-t border-slate-800/50 space-y-4">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <LikeButton initialLikesCount={post.likesCount ?? 0} />
+                  <div>
+                    <p className="text-sm text-slate-400 mb-2">
+                      Compartilhe este post:
+                    </p>
+                    <ShareButton
+                      url={postUrl}
+                      title={post.title}
+                      summary={post.summary}
+                    />
+                  </div>
+                </div>
+              </footer>
+            </div>
+          </LikeProvider>
         </article>
       </div>
     </main>

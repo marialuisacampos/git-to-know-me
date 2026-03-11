@@ -84,6 +84,10 @@
   --radius: 0.5rem;
 }
 
+html {
+  background-color: #020617; /* slate-950: evita flash branco no overscroll (macOS/iOS) */
+}
+
 body {
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
 }

@@ -1,12 +1,26 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-interface LikeButtonProps {
-  username: string;
-  slug: string;
-  initialLikesCount?: number;
+// ─── Context ────────────────────────────────────────────────────────────────
+
+interface LikeContextValue {
+  liked: boolean;
+  count: number;
+  isLoading: boolean;
+  mounted: boolean;
+  handleClick: () => void;
 }
+
+const LikeContext = createContext<LikeContextValue | null>(null);
+
+function useLikeContext() {
+  const ctx = useContext(LikeContext);
+  if (!ctx) throw new Error("LikeButton must be used inside LikeProvider");
+  return ctx;
+}
+
+// ─── Storage helpers ─────────────────────────────────────────────────────────
 
 const STORAGE_KEY = "gtkm:liked-posts";
 
@@ -24,7 +38,7 @@ function setLikedPosts(posts: Set<string>) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...posts]));
   } catch {
-    // localStorage full or unavailable
+    // localStorage indisponível ou cheio
   }
 }
 
@@ -32,11 +46,21 @@ function postKey(username: string, slug: string) {
   return `${username}/${slug}`;
 }
 
-export function LikeButton({
+// ─── Provider ────────────────────────────────────────────────────────────────
+
+interface LikeProviderProps {
+  username: string;
+  slug: string;
+  initialLikesCount?: number;
+  children: React.ReactNode;
+}
+
+export function LikeProvider({
   username,
   slug,
   initialLikesCount = 0,
-}: LikeButtonProps) {
+  children,
+}: LikeProviderProps) {
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(initialLikesCount);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,17 +75,12 @@ export function LikeButton({
     fetch(`/api/posts/like?username=${username}&slug=${encodeURIComponent(slug)}`)
       .then((res) => res.json())
       .then((data) => {
-        if (typeof data.likesCount === "number") {
-          setCount(data.likesCount);
-        }
+        if (typeof data.likesCount === "number") setCount(data.likesCount);
         if (typeof data.liked === "boolean") {
           setLiked(data.liked);
           const posts = getLikedPosts();
-          if (data.liked) {
-            posts.add(key);
-          } else {
-            posts.delete(key);
-          }
+          if (data.liked) posts.add(key);
+          else posts.delete(key);
           setLikedPosts(posts);
         }
       })
@@ -85,17 +104,12 @@ export function LikeButton({
       );
       const data = await res.json();
 
-      if (typeof data.likesCount === "number") {
-        setCount(data.likesCount);
-      }
+      if (typeof data.likesCount === "number") setCount(data.likesCount);
       if (typeof data.liked === "boolean") {
         setLiked(data.liked);
         const posts = getLikedPosts();
-        if (data.liked) {
-          posts.add(key);
-        } else {
-          posts.delete(key);
-        }
+        if (data.liked) posts.add(key);
+        else posts.delete(key);
         setLikedPosts(posts);
       }
     } catch {
@@ -106,6 +120,48 @@ export function LikeButton({
     }
   }, [isLoading, liked, username, slug]);
 
+  return (
+    <LikeContext.Provider value={{ liked, count, isLoading, mounted, handleClick }}>
+      {children}
+    </LikeContext.Provider>
+  );
+}
+
+// ─── Button variants ──────────────────────────────────────────────────────────
+
+interface LikeButtonProps {
+  /** @default "default" */
+  variant?: "default" | "compact";
+  /** Fallback para SSR antes do provider montar */
+  initialLikesCount?: number;
+}
+
+export function LikeButton({ variant = "default", initialLikesCount = 0 }: LikeButtonProps) {
+  const { liked, count, isLoading, mounted, handleClick } = useLikeContext();
+
+  if (variant === "compact") {
+    return (
+      <button
+        onClick={mounted ? handleClick : undefined}
+        disabled={!mounted || isLoading}
+        aria-label={liked ? "Remover curtida" : "Curtir post"}
+        className={`
+          group/like inline-flex items-center gap-1.5 text-xs transition-all duration-300
+          ${
+            liked
+              ? "text-pink-400"
+              : "text-slate-500 hover:text-pink-400/80"
+          }
+          ${!mounted || isLoading ? "opacity-60 cursor-default" : "cursor-pointer"}
+        `}
+      >
+        <HeartIcon filled={liked} size={14} />
+        <span className="tabular-nums">{mounted ? count : initialLikesCount}</span>
+      </button>
+    );
+  }
+
+  // variant === "default"
   if (!mounted) {
     return (
       <div className="flex items-center gap-1.5">
@@ -113,7 +169,7 @@ export function LikeButton({
           disabled
           className="group/like flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800/50 bg-slate-900/30 text-slate-500 cursor-default transition-all"
         >
-          <HeartIcon filled={false} />
+          <HeartIcon filled={false} size={16} />
           <span className="text-sm tabular-nums">{initialLikesCount}</span>
         </button>
       </div>
@@ -136,19 +192,21 @@ export function LikeButton({
           ${isLoading ? "opacity-70 cursor-wait" : "cursor-pointer"}
         `}
       >
-        <HeartIcon filled={liked} />
+        <HeartIcon filled={liked} size={16} />
         <span className="text-sm tabular-nums">{count}</span>
       </button>
     </div>
   );
 }
 
-function HeartIcon({ filled }: { filled: boolean }) {
+// ─── Icon ─────────────────────────────────────────────────────────────────────
+
+function HeartIcon({ filled, size }: { filled: boolean; size: number }) {
   if (filled) {
     return (
       <svg
-        width="16"
-        height="16"
+        width={size}
+        height={size}
         viewBox="0 0 24 24"
         fill="currentColor"
         className="transition-transform duration-300 scale-110"
@@ -160,8 +218,8 @@ function HeartIcon({ filled }: { filled: boolean }) {
 
   return (
     <svg
-      width="16"
-      height="16"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
