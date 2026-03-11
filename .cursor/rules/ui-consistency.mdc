@@ -1,0 +1,16 @@
+---
+description: Consistencia visual e de UX nos componentes frontend
+globs: "{app,components}/**/*.{tsx,ts,css}"
+alwaysApply: false
+---
+
+# UI Consistency
+
+Seguir `docs/standards/ui-consistency.md`.
+
+- Usar tokens de `globals.css`; nao criar cores avulsas.
+- Compor sobre componentes de `components/base-ui/`; nao recriar primitivos.
+- Usar `cn()` de `lib/utils.ts` para classes condicionais.
+- Cobrir estados: loading (Skeleton), empty (EmptyState), error (mensagem visivel).
+- Acessibilidade: `aria-label` em botoes-icone, foco visivel, semantica HTML.
+- Mobile-first: base para mobile, expandir com `sm:`, `md:`, `lg:`.

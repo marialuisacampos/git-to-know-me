@@ -55,7 +55,7 @@ export function ShareButton({ url, title, summary }: ShareButtonProps) {
 
       <button
         onClick={handleCopyLink}
-        className="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 text-slate-300 text-xs rounded-md transition-colors"
+        className="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 text-slate-300 text-xs rounded-md transition-colors cursor-pointer"
       >
         <HiLink className="w-3.5 h-3.5" />
         Copiar

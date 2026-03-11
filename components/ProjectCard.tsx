@@ -30,7 +30,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           <div className="relative p-5 space-y-3">
             <button
               onClick={onClick}
-              className="w-full text-left focus:outline-none"
+              className="w-full text-left cursor-pointer focus:outline-none"
             >
               <h3 className="text-base font-semibold text-slate-100 group-hover:text-white transition-colors duration-300 line-clamp-1">
                 {project.name}
@@ -71,7 +71,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
                     e.stopPropagation();
                     setShowPreview(true);
                   }}
-                  className="inline-flex items-center gap-1.5 h-8 px-3 bg-blue-600/90 hover:bg-blue-600 text-white text-xs rounded-md transition-colors duration-300"
+                  className="inline-flex items-center gap-1.5 h-8 px-3 bg-blue-600/90 hover:bg-blue-600 text-white text-xs rounded-md transition-colors duration-300 cursor-pointer"
                 >
                   <HiEye className="w-3.5 h-3.5" />
                   Preview
@@ -82,7 +82,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
                   e.stopPropagation();
                   onClick();
                 }}
-                className="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-800/40 hover:bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-slate-300 text-xs rounded-md transition-all duration-300"
+                className="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-800/40 hover:bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-slate-300 text-xs rounded-md transition-all duration-300 cursor-pointer"
               >
                 <HiDocumentText className="w-3.5 h-3.5" />
                 README

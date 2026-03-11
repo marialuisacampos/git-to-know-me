@@ -1,0 +1,16 @@
+---
+description: Minimo obrigatorio de testes por tipo de mudanca
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Testing Minimum
+
+Seguir `docs/standards/testing-minimum.md`.
+
+- Nova API route → teste de status codes, validacao e erros.
+- Logica de negocio em `lib/` → teste unitario.
+- Bugfix → teste de regressao que reproduz o bug.
+- Componente interativo novo → teste de comportamento (recomendado).
+- Nenhum `.only` ou `.skip` esquecido no commit.
+- `npm test` deve passar antes de merge.

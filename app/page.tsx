@@ -10,22 +10,22 @@ export default async function Home() {
   const session = await getServerSession();
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 overflow-hidden">
+    <main className="relative min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 overflow-hidden">
       <BackgroundAnimation />
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
-        <header className="pt-6 pb-12 flex justify-between items-center animate-in fade-in duration-500 ease-out">
-          <div className="flex items-center gap-6">
-            <Logo href="/" size="md" />
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col min-h-screen">
+        <header className="py-6 flex justify-between items-center gap-4 animate-in fade-in duration-500 ease-out">
+          <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+            <Logo href="/" size="md" variant="full" />
             <Link
               href="/getting-started"
-              className="text-slate-500 hover:text-slate-300 transition-colors text-sm"
+              className="hidden sm:inline text-slate-500 hover:text-slate-300 transition-colors text-sm whitespace-nowrap"
             >
               Como usar
             </Link>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {session?.user && (
               <Link href="/dashboard">
                 <Button variant="ghost" size="sm">
@@ -37,7 +37,7 @@ export default async function Home() {
           </div>
         </header>
 
-        <div className="flex flex-col justify-center min-h-[calc(100vh-200px)] pb-20">
+        <div className="flex-1 flex flex-col justify-center py-8">
           <div className="space-y-4 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-100 leading-tight max-w-2xl">
               Transforme seu GitHub em um portfólio profissional
@@ -151,15 +151,16 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className="pt-16 space-y-4 animate-in fade-in delay-300 motion-reduce:animate-none">
-            <div className="flex justify-center">
-              <Logo size="sm" />
-            </div>
-            <p className="text-slate-600 text-xs text-center">
-              Desenvolvido por @marialuisacampos
-            </p>
-          </div>
         </div>
+
+        <footer className="py-6 space-y-3 animate-in fade-in delay-300 motion-reduce:animate-none">
+          <div className="flex justify-center">
+            <Logo size="sm" variant="full" />
+          </div>
+          <p className="text-slate-600 text-xs text-center">
+            Desenvolvido por @marialuisacampos
+          </p>
+        </footer>
       </div>
     </main>
   );

@@ -9,9 +9,9 @@ export function ToastProvider() {
       theme="dark"
       toastOptions={{
         style: {
-          background: "rgb(15 23 42)",
-          border: "1px solid rgb(51 65 85)",
-          color: "rgb(241 245 249)",
+          background: "var(--color-slate-900)",
+          border: "1px solid var(--color-slate-700)",
+          color: "var(--color-slate-100)",
         },
       }}
     />

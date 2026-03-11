@@ -1,0 +1,21 @@
+---
+description: Consultar docs internos do projeto antes de propor mudancas
+alwaysApply: true
+---
+
+# Docs First
+
+1. Antes de propor mudancas, consultar docs relevantes em `docs/`.
+2. Seguir decisoes ja documentadas; se houver conflito, apontar explicitamente.
+3. Ao responder, citar os caminhos dos docs usados (ex: `docs/standards/security-web.md`).
+4. Se faltar documentacao para a mudanca, sugerir criacao/atualizacao de doc junto da mudanca.
+
+Docs disponiveis:
+- `docs/architecture/overview.md` — stack, estrutura, principios
+- `docs/architecture/data-flow.md` — fluxo de dados ponta a ponta
+- `docs/standards/ui-consistency.md` — tokens, componentes, estados, acessibilidade
+- `docs/standards/testing-minimum.md` — quando e como testar
+- `docs/standards/security-web.md` — env, auth, validacao, XSS, erros
+- `docs/standards/api-conventions.md` — padrao de rotas, respostas, validacao
+- `docs/operations/migrations-prisma.md` — fluxo seguro de migrations
+- `docs/operations/deploy-vercel.md` — pipeline e checklist de deploy
